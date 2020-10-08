@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace character
 {
-    public enum InnocentMode
+    public enum InnocentState
     {
         Neutral,
         Running
@@ -26,14 +26,14 @@ namespace character
             base.Start();
         }
 
-        public void SetMode(InnocentMode mode)
+        public void SetMode(InnocentState state)
         {
-            if (mode == InnocentMode.Neutral)
+            if (state == InnocentState.Neutral)
             {
                 neutralSprite.gameObject.SetActive(true);
                 runningSprite.gameObject.SetActive(false);
             }
-            else if (mode == InnocentMode.Running)
+            else if (state == InnocentState.Running)
             {
                 runningSprite.gameObject.SetActive(true);
                 neutralSprite.gameObject.SetActive(false);

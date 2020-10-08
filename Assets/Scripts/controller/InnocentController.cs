@@ -18,8 +18,8 @@ namespace controller
         private ActivatedZone activatedZone = null;
 
         private readonly List<Zombie> threats = new List<Zombie>();
-        private InnocentMode currentMode = InnocentMode.Neutral;
-        public InnocentMode GetMode() => currentMode;
+        private InnocentState currentState = InnocentState.Neutral;
+        public InnocentState GetMode() => currentState;
 
         public Zombie GetThreat() => threats.First();
 
@@ -33,12 +33,12 @@ namespace controller
             activatedZone.OnTriggerExited += OnExitedRunZone;
         }
 
-        public void SetMode(InnocentMode newMode)
+        public void SetMode(InnocentState newState)
         {
-            if (newMode != currentMode)
+            if (newState != currentState)
             {
-                currentMode = newMode;
-                controlledInnocent.SetMode(currentMode);
+                currentState = newState;
+                controlledInnocent.SetMode(currentState);
                 DumpOrders();
             }
         }
@@ -62,7 +62,7 @@ namespace controller
                     threats.Add(z);
                 }
 
-                SetMode(InnocentMode.Running);
+                SetMode(InnocentState.Running);
             }
         }
 
@@ -78,7 +78,7 @@ namespace controller
 
                 if (threats.Count == 0)
                 {
-                    SetMode(InnocentMode.Neutral);
+                    SetMode(InnocentState.Neutral);
                 }
             }
         }

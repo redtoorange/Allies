@@ -5,6 +5,7 @@ using character;
 using controller.ai;
 using orders;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace controller
 {
@@ -14,14 +15,15 @@ namespace controller
         
         private List<GameCharacter> targets = new List<GameCharacter>();
 
+        [FormerlySerializedAs("currentMode")]
         [SerializeField]
-        private ZombieMode currentMode = ZombieMode.SHAMBLE;
+        private ZombieState currentState = ZombieState.Shamble;
 
         private Zombie controlledZombie = null;
         private ActivatedZone activatedZone = null;
 
         // Getters
-        public ZombieMode GetCurrentMode() => currentMode;
+        public ZombieState GetCurrentMode() => currentState;
         public GameCharacter GetTarget() => targets.First();
 
         private void Start()
@@ -41,12 +43,12 @@ namespace controller
             activatedZone.OnTriggerExited -= OnExitedChaseZone;
         }
 
-        public void SetCurrentMode(ZombieMode mode)
+        public void SetCurrentMode(ZombieState state)
         {
-            if (mode != currentMode)
+            if (state != currentState)
             {
-                currentMode = mode;
-                controlledZombie.SetMode(currentMode);
+                currentState = state;
+                controlledZombie.SetMode(currentState);
                 DumpOrders();
             }
         }
@@ -56,9 +58,9 @@ namespace controller
         {
             if (other.CompareTag("Player"))
             {
-                if (currentMode != ZombieMode.COMBAT)
+                if (currentState != ZombieState.Combat)
                 {
-                    SetCurrentMode(ZombieMode.CHASE);
+                    SetCurrentMode(ZombieState.Chase);
                 }
 
                 if (!targets.Contains(other.GetComponent<Player>()))
@@ -68,9 +70,9 @@ namespace controller
             }
             else if (other.CompareTag("Innocent"))
             {
-                if (currentMode != ZombieMode.COMBAT)
+                if (currentState != ZombieState.Combat)
                 {
-                    SetCurrentMode(ZombieMode.CHASE);
+                    SetCurrentMode(ZombieState.Chase);
                 }
 
                 if (!targets.Contains(other.GetComponent<Innocent>()))
@@ -90,9 +92,9 @@ namespace controller
                     DumpOrders();
                 }
 
-                if (currentMode != ZombieMode.COMBAT && targets.Count == 0)
+                if (currentState != ZombieState.Combat && targets.Count == 0)
                 {
-                    SetCurrentMode(ZombieMode.SHAMBLE);
+                    SetCurrentMode(ZombieState.Shamble);
                     AddOrder(new WaitOrder(0.25f));
                 }
             }
@@ -104,9 +106,9 @@ namespace controller
                     DumpOrders();
                 }
 
-                if (currentMode != ZombieMode.COMBAT && targets.Count == 0)
+                if (currentState != ZombieState.Combat && targets.Count == 0)
                 {
-                    SetCurrentMode(ZombieMode.SHAMBLE);
+                    SetCurrentMode(ZombieState.Shamble);
                     AddOrder(new WaitOrder(0.25f));
                 }
             }

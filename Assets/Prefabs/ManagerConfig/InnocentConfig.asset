@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: InnocentConfig
   m_EditorClassIdentifier: 
   wanderSpeed: 1
-  wanderRange: 2
+  wanderRange: 1
   wanderWait: {x: 0.5, y: 3}
-  runSpeed: 2.5
+  runSpeed: 2
   combatSpeed: 5

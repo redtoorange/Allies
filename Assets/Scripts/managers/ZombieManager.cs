@@ -48,7 +48,7 @@ namespace managers
             {
                 foreach (ZombieController zomby in controllers)
                 {
-                    zomby.SetCurrentMode(ZombieMode.COMBAT);
+                    zomby.SetCurrentMode(ZombieState.Combat);
                 }
             }
         }
@@ -60,13 +60,13 @@ namespace managers
             {
                 switch (zombieController.GetCurrentMode())
                 {
-                    case ZombieMode.SHAMBLE:
+                    case ZombieState.Shamble:
                         CreateShambleOrders(zombieController);
                         break;
-                    case ZombieMode.CHASE:
+                    case ZombieState.Chase:
                         CreateChaseOrders(zombieController);
                         break;
-                    case ZombieMode.COMBAT:
+                    case ZombieState.Combat:
                         CreateCombatOrders(zombieController);
                         break;
                 }

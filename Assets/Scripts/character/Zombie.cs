@@ -4,11 +4,11 @@ using UnityEngine;
 namespace character
 {
     [Serializable]
-    public enum ZombieMode
+    public enum ZombieState
     {
-        SHAMBLE,
-        CHASE,
-        COMBAT
+        Shamble,
+        Chase,
+        Combat
     }
 
     /// <summary>
@@ -27,14 +27,14 @@ namespace character
             base.Start();
         }
 
-        public void SetMode(ZombieMode mode)
+        public void SetMode(ZombieState state)
         {
-            if (mode == ZombieMode.SHAMBLE)
+            if (state == ZombieState.Shamble)
             {
                 shambleSprite.gameObject.SetActive(true);
                 chaseSprite.gameObject.SetActive(false);
             }
-            else if (mode == ZombieMode.CHASE || mode == ZombieMode.COMBAT)
+            else if (state == ZombieState.Chase || state == ZombieState.Combat)
             {
                 chaseSprite.gameObject.SetActive(true);
                 shambleSprite.gameObject.SetActive(false);

@@ -34,7 +34,7 @@ namespace managers
             {
                 foreach (InnocentController innocent in controllers)
                 {
-                    innocent.SetMode(InnocentMode.Running);
+                    innocent.SetMode(InnocentState.Running);
                 }
             }
         }
@@ -44,11 +44,11 @@ namespace managers
             RemoveController(innocent);
             if (to == InnocentConvertedTo.Ally)
             {
-                gameManager.AllyManager.SpawnAlly(innocent.GetPosition());
+                gameManager.GetAllyManager().SpawnAlly(innocent.GetPosition());
             }
             else if (to == InnocentConvertedTo.Zombie)
             {
-                gameManager.ZombieManager.SpawnZombie(innocent.GetPosition());
+                gameManager.GetZombieManager().SpawnZombie(innocent.GetPosition());
             }
         }
 
@@ -56,10 +56,10 @@ namespace managers
         {
             switch (innocent.GetMode())
             {
-                case InnocentMode.Neutral:
+                case InnocentState.Neutral:
                     CreateWanderOrders(innocent);
                     break;
-                case InnocentMode.Running:
+                case InnocentState.Running:
                     CreateRunOrders(innocent);
                     break;
             }
