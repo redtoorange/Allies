@@ -7,6 +7,8 @@ namespace controller
     public abstract class AIController : MonoBehaviour
     {
         private float movementThreshold = 0.1f;
+        private float stallThreshold = 0.001f;
+        private Vector2 positionLastFrame = new Vector2(float.MinValue, float.MinValue);
 
         protected Queue<Order> orders = new Queue<Order>();
         protected Order currentOrder = null;
@@ -40,7 +42,14 @@ namespace controller
             Vector2 dir = mo.pos - position;
             rigidbody2D.MovePosition(position + (dir.normalized * (mo.spd * Time.fixedDeltaTime)));
 
-            return Vector2.Distance(rigidbody2D.position, mo.pos) < movementThreshold;
+            // Detect if the Zombie has stalled
+            if (Vector2.Distance(rigidbody2D.position, positionLastFrame) < stallThreshold)
+            {
+                return true;
+            }
+
+            positionLastFrame = rigidbody2D.position;
+            return Vector2.Distance(positionLastFrame, mo.pos) < movementThreshold;
         }
 
         protected bool ChaseTowards(ChaseOrder co)

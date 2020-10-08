@@ -11,8 +11,8 @@ namespace managers
     [Serializable]
     public enum GlobalZombieMode
     {
-        DOCILE,
-        AGGRESSIVE
+        Shamble,
+        Combat
     }
 
     public class ZombieManager : AIManager<ZombieController>
@@ -24,7 +24,7 @@ namespace managers
         private ZombieManagerConfig config;
 
         [SerializeField]
-        private GlobalZombieMode currentMode = GlobalZombieMode.DOCILE;
+        private GlobalZombieMode currentMode = GlobalZombieMode.Shamble;
 
 
         private void Start()
@@ -33,7 +33,9 @@ namespace managers
 
             foreach (ZombieController zomby in controllers)
             {
+                zomby.SetSearchRange(config.shambleSearchRange);
                 zomby.OnNeedsOrders += CreateZombieOrders;
+                zomby.OnDeath += RemoveController;
             }
         }
 
@@ -46,9 +48,11 @@ namespace managers
         {
             if (phase == GameRoundPhase.Combat)
             {
-                foreach (ZombieController zomby in controllers)
+                currentMode = GlobalZombieMode.Combat;
+                foreach (ZombieController zombieController in controllers)
                 {
-                    zomby.SetCurrentMode(ZombieState.Combat);
+                    zombieController.SetCurrentMode(ZombieState.Combat);
+                    zombieController.SetSearchRange(config.combatSearchRange);
                 }
             }
         }
@@ -56,6 +60,12 @@ namespace managers
 
         private void CreateZombieOrders(ZombieController zombieController)
         {
+            if (currentMode == GlobalZombieMode.Combat && zombieController.GetCurrentMode() != ZombieState.Combat)
+            {
+                zombieController.SetCurrentMode(ZombieState.Combat);
+                zombieController.SetSearchRange(config.combatSearchRange);
+            }
+
             if (zombieController.NeedsOrder())
             {
                 switch (zombieController.GetCurrentMode())
@@ -88,18 +98,20 @@ namespace managers
 
         private void CreateChaseOrders(ZombieController zombieController)
         {
-            if (zombieController.GetTarget() != null)
+            GameCharacter target = zombieController.GetTarget();
+            if (target != null)
             {
                 zombieController.AddOrder(new WaitOrder(Random.Range(config.chaseWait.x, config.chaseWait.y)));
-                zombieController.AddOrder(new ChaseOrder(zombieController.GetTarget(), config.chaseSpeed));
+                zombieController.AddOrder(new ChaseOrder(target, config.chaseSpeed));
             }
         }
 
         private void CreateCombatOrders(ZombieController zombieController)
         {
-            if (zombieController.GetTarget() != null)
+            GameCharacter target = zombieController.GetTarget();
+            if (target)
             {
-                zombieController.AddOrder(new ChaseOrder(zombieController.GetTarget(), config.combatSpeed));
+                zombieController.AddOrder(new ChaseOrder(target, config.combatSpeed));
             }
             else
             {
@@ -115,12 +127,15 @@ namespace managers
 
         public void SpawnZombie(Vector2 position)
         {
-            GameObject go = Instantiate(zombiePrefab, position, Quaternion.identity, transform);
+            if (controllers.Count >= 50) return;
 
+            GameObject go = Instantiate(zombiePrefab, position, Quaternion.identity, transform);
             ZombieController controller = go.GetComponent<ZombieController>();
+
             AddController(controller);
 
             controller.OnNeedsOrders += CreateZombieOrders;
+            controller.OnDeath += RemoveController;
         }
     }
 }

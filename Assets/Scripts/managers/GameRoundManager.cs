@@ -1,7 +1,6 @@
 ﻿using System;
 using ui;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace managers
 {
@@ -24,7 +23,8 @@ namespace managers
         [SerializeField]
         private GameRoundPhase currentPhase = GameRoundPhase.Recruitment;
 
-        public UnityEvent<GameRoundPhase> OnPhaseChange;
+        public event Action<GameRoundPhase> OnPhaseChange;
+
         private void Start()
         {
             if (recruitmentCountdown)
@@ -52,7 +52,7 @@ namespace managers
             }
 
             currentPhase = GameRoundPhase.Combat;
-            OnPhaseChange.Invoke(currentPhase);
+            OnPhaseChange?.Invoke(currentPhase);
         }
     }
 }

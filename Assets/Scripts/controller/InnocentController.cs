@@ -11,6 +11,7 @@ namespace controller
 {
     public class InnocentController : AIController
     {
+        public event Action<InnocentController> OnDeath;
         public event Action<InnocentController> OnNeedsOrders;
         public event Action<InnocentController, InnocentConvertedTo> OnConverted;
 
@@ -21,13 +22,15 @@ namespace controller
         private InnocentState currentState = InnocentState.Neutral;
         public InnocentState GetMode() => currentState;
 
-        public Zombie GetThreat() => threats.First();
+        public Zombie GetThreat() => threats.Count > 0 ? threats.First() : null;
 
         private void Start()
         {
             base.Start();
 
             controlledInnocent = GetComponent<Innocent>();
+            controlledInnocent.OnDeath += () => OnDeath?.Invoke(this);
+            
             activatedZone = GetComponentInChildren<ActivatedZone>();
             activatedZone.OnTriggerEntered += OnEnteredRunZone;
             activatedZone.OnTriggerExited += OnExitedRunZone;
@@ -146,9 +149,12 @@ namespace controller
             {
                 ConvertToAlly();
                 Destroy(gameObject);
+                gameObject.SetActive(false);
             }
             else if (other.gameObject.GetComponent<Zombie>())
             {
+                gameObject.SetActive(false);
+
                 ConvertToZombie();
                 Destroy(gameObject);
             }

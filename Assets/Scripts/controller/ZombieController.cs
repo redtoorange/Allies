@@ -11,8 +11,9 @@ namespace controller
 {
     public class ZombieController : AIController
     {
-        public event Action<ZombieController> OnNeedsOrders; 
-        
+        public event Action<ZombieController> OnDeath;
+        public event Action<ZombieController> OnNeedsOrders;
+
         private List<GameCharacter> targets = new List<GameCharacter>();
 
         [FormerlySerializedAs("currentMode")]
@@ -24,15 +25,16 @@ namespace controller
 
         // Getters
         public ZombieState GetCurrentMode() => currentState;
-        public GameCharacter GetTarget() => targets.First();
+        public GameCharacter GetTarget() => targets.Count > 0 ? targets.First() : null;
 
         private void Start()
         {
             base.Start();
 
             controlledZombie = GetComponent<Zombie>();
-            activatedZone = GetComponentInChildren<ActivatedZone>();
+            controlledZombie.OnDeath += () => OnDeath?.Invoke(this);
 
+            activatedZone = GetComponentInChildren<ActivatedZone>();
             activatedZone.OnTriggerEntered += OnEnteredChaseZone;
             activatedZone.OnTriggerExited += OnExitedChaseZone;
         }
@@ -51,6 +53,11 @@ namespace controller
                 controlledZombie.SetMode(currentState);
                 DumpOrders();
             }
+        }
+
+        public void SetSearchRange(float range)
+        {
+            activatedZone.SetRange(range);
         }
 
 

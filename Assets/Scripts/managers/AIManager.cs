@@ -1,22 +1,26 @@
 ﻿using System.Collections.Generic;
-using controller;
 using UnityEngine;
 
 namespace managers
 {
-    public class AIManager<T> : MonoBehaviour 
+    public abstract class AIManager<T> : MonoBehaviour
     {
         protected GameManager gameManager = null;
         protected List<T> controllers = null;
         protected GameRoundManager grm = null;
 
+        protected void Start()
+        {
+            controllers = new List<T>(GetComponentsInChildren<T>());
+            gameManager = GetComponentInParent<GameManager>();
+
+            grm = FindObjectOfType<GameRoundManager>();
+            grm.OnPhaseChange += HandlePhaseChange;
+        }
 
         protected void AddController(T controller)
         {
             controllers.Add(controller);
-
-            grm = FindObjectOfType<GameRoundManager>();
-            grm.OnPhaseChange.AddListener(HandlePhaseChange);
         }
 
         protected void RemoveController(T controller)
@@ -24,14 +28,7 @@ namespace managers
             controllers.Remove(controller);
         }
 
-        protected void Start()
-        {
-            controllers = new List<T>(GetComponentsInChildren<T>());
-            gameManager = GetComponentInParent<GameManager>();
-        }
 
-        protected virtual void HandlePhaseChange(GameRoundPhase phase)
-        {
-        }
+        protected abstract void HandlePhaseChange(GameRoundPhase phase);
     }
 }

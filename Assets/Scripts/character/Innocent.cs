@@ -1,4 +1,5 @@
 ﻿using System;
+using bullet;
 using controller;
 using UnityEngine;
 
@@ -7,7 +8,8 @@ namespace character
     public enum InnocentState
     {
         Neutral,
-        Running
+        Running,
+        Combat
     }
 
     /// <summary>
@@ -33,7 +35,7 @@ namespace character
                 neutralSprite.gameObject.SetActive(true);
                 runningSprite.gameObject.SetActive(false);
             }
-            else if (state == InnocentState.Running)
+            else if (state == InnocentState.Running || state == InnocentState.Combat)
             {
                 runningSprite.gameObject.SetActive(true);
                 neutralSprite.gameObject.SetActive(false);

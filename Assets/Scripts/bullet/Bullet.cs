@@ -5,6 +5,9 @@ namespace bullet
     public class Bullet : MonoBehaviour
     {
         [SerializeField]
+        private int damageAmount = 1;
+        
+        [SerializeField]
         private float travelSpeed = 1.0f;
 
         [SerializeField]
@@ -59,8 +62,12 @@ namespace bullet
         {
             if (other.gameObject != ignore)
             {
-                Debug.Log("Collided with " + other.gameObject.name);
-                ResetBullet();
+                IDamageable d = other.GetComponent<IDamageable>();
+                if (d != null)
+                {
+                    d.TakeDamage(damageAmount);
+                    ResetBullet();
+                }
             }
         }
     }

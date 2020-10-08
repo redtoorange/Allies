@@ -15,6 +15,11 @@ namespace controller.ai
             chaseZone = GetComponent<CircleCollider2D>();
         }
 
+        public void SetRange(float radius)
+        {
+            chaseZone.radius = radius;
+        }
+
         private void OnTriggerEnter2D(Collider2D other)
         {
             OnTriggerEntered?.Invoke(other);

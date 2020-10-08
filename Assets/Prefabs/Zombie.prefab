@@ -132,7 +132,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stats:
-    health: 0
+    health: 1
   shambleSprite: {fileID: 1671069285514178736}
   chaseSprite: {fileID: 5509155690567727851}
 --- !u!114 &8325642059385210965
@@ -147,7 +147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 686c734a92124761916f64754971a6c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentMode: 0
+  currentState: 0
 --- !u!50 &2136955969
 Rigidbody2D:
   serializedVersion: 4

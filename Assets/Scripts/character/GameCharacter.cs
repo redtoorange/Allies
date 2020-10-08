@@ -1,4 +1,5 @@
 ﻿using System;
+using bullet;
 using UnityEngine;
 
 namespace character
@@ -9,10 +10,12 @@ namespace character
         public int health;
     }
 
-    public class GameCharacter : MonoBehaviour
+    public class GameCharacter : MonoBehaviour, IDamageable
     {
         [SerializeField]
-        private StatLine stats;
+        protected StatLine stats;
+
+        public event Action OnDeath; 
 
         private Rigidbody2D rb2d = null;
         public Vector2 GetPosition() => rb2d.position;
@@ -20,6 +23,16 @@ namespace character
         protected void Start()
         {
             rb2d = GetComponent<Rigidbody2D>();
+        }
+
+        public void TakeDamage(int amount)
+        {
+            stats.health -= amount;
+            if (stats.health <= 0)
+            {
+                OnDeath?.Invoke();
+                Destroy(gameObject);
+            }
         }
     }
 }

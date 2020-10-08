@@ -952,11 +952,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   recruitmentCountdown: {fileID: 1401311252}
-  recruitmentRoundLength: 120
+  recruitmentRoundLength: 5
   currentPhase: 0
-  OnPhaseChange:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!4 &862644145
 Transform:
   m_ObjectHideFlags: 0
@@ -2183,7 +2180,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cacheSize: 100
-  bulletPrefab: {fileID: 6166708740054785542, guid: e54074b85006cd642a4a57a870081e79, type: 3}
+  bulletPrefab: {fileID: -3572714364610103921, guid: e54074b85006cd642a4a57a870081e79, type: 3}
 --- !u!1001 &1671069285129476343
 PrefabInstance:
   m_ObjectHideFlags: 0

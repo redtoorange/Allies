@@ -17,6 +17,8 @@ namespace managers
         [SerializeField]
         private InnocentManagerConfig config;
 
+        private GameRoundPhase currentPhase = GameRoundPhase.Recruitment;
+
         private void Start()
         {
             base.Start();
@@ -25,6 +27,7 @@ namespace managers
             {
                 innocent.OnConverted += OnInnocentConverted;
                 innocent.OnNeedsOrders += OnNeedsOrderHandler;
+                innocent.OnDeath += RemoveController;
             }
         }
 
@@ -32,6 +35,7 @@ namespace managers
         {
             if (phase == GameRoundPhase.Combat)
             {
+                currentPhase = GameRoundPhase.Combat;
                 foreach (InnocentController innocent in controllers)
                 {
                     innocent.SetMode(InnocentState.Running);
@@ -80,9 +84,20 @@ namespace managers
 
         private void CreateRunOrders(InnocentController innocentController)
         {
-            if (innocentController.GetThreat() != null)
+            GameCharacter threat = innocentController.GetThreat();
+            if (threat != null)
             {
-                innocentController.AddOrder(new RunOrder(innocentController.GetThreat(), config.runSpeed));
+                innocentController.AddOrder(new RunOrder(threat, config.runSpeed));
+            }
+            else if (currentPhase == GameRoundPhase.Combat)
+            {
+                Vector2 destination = new Vector2(
+                    Random.Range(-config.combatRange, config.combatRange),
+                    Random.Range(-config.combatRange, config.combatRange)
+                );
+
+                innocentController.AddOrder(new MoveOrder(innocentController.GetPosition() + destination,
+                    config.combatSpeed));
             }
         }
     }
