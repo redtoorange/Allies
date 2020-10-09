@@ -15,12 +15,12 @@ namespace controller
         public event Action<InnocentController> OnNeedsOrders;
         public event Action<InnocentController, InnocentConvertedTo> OnConverted;
 
-        private Innocent controlledInnocent;
+        private InnocentManager manager = null;
+        private Innocent controlledInnocent = null;
         private ActivatedZone activatedZone = null;
 
         private readonly List<Zombie> threats = new List<Zombie>();
         private InnocentState currentState = InnocentState.Neutral;
-        public InnocentState GetMode() => currentState;
 
         public Zombie GetThreat() => threats.Count > 0 ? threats.First() : null;
 
@@ -28,32 +28,51 @@ namespace controller
         {
             base.Start();
 
+            manager = GetComponentInParent<InnocentManager>();
             controlledInnocent = GetComponent<Innocent>();
             controlledInnocent.OnDeath += () => OnDeath?.Invoke(this);
-            
+
             activatedZone = GetComponentInChildren<ActivatedZone>();
             activatedZone.OnTriggerEntered += OnEnteredRunZone;
             activatedZone.OnTriggerExited += OnExitedRunZone;
         }
 
-        public void SetMode(InnocentState newState)
+        public InnocentState GetState() => currentState;
+
+        public void SetState(InnocentState newState)
         {
+            if (newState == InnocentState.Neutral && manager.GetGlobalState() == InnocentState.Combat)
+            {
+                newState = InnocentState.Combat;
+            }
+
             if (newState != currentState)
             {
-                currentState = newState;
-                controlledInnocent.SetMode(currentState);
-                DumpOrders();
+                if (currentState == InnocentState.Running && threats.Count != 0)
+                {
+                    Debug.Log("Cannot changes state with threats in range");
+                }
+                else
+                {
+                    currentState = newState;
+                    controlledInnocent.SetMode(currentState);
+                    DumpOrders();
+                }
             }
         }
 
         public void ConvertToZombie()
         {
+            gameObject.SetActive(false);
             OnConverted?.Invoke(this, InnocentConvertedTo.Zombie);
+            Destroy(gameObject);
         }
 
         public void ConvertToAlly()
         {
+            gameObject.SetActive(false);
             OnConverted?.Invoke(this, InnocentConvertedTo.Ally);
+            Destroy(gameObject);
         }
 
         private void OnEnteredRunZone(Collider2D other)
@@ -65,7 +84,7 @@ namespace controller
                     threats.Add(z);
                 }
 
-                SetMode(InnocentState.Running);
+                SetState(InnocentState.Running);
             }
         }
 
@@ -79,10 +98,7 @@ namespace controller
                     DumpOrders();
                 }
 
-                if (threats.Count == 0)
-                {
-                    SetMode(InnocentState.Neutral);
-                }
+                SetState(InnocentState.Neutral);
             }
         }
 
@@ -112,7 +128,7 @@ namespace controller
             {
                 case MoveOrder mo:
                 {
-                    if (MoveTowards(mo))
+                    if (Move(mo))
                     {
                         currentOrder = null;
                     }
@@ -121,7 +137,7 @@ namespace controller
                 }
                 case RunOrder ro:
                 {
-                    if (RunAway(ro))
+                    if (Run(ro))
                     {
                         currentOrder = null;
                     }
@@ -130,7 +146,7 @@ namespace controller
                 }
                 case WaitOrder wo:
                 {
-                    if (WaitAround(ref wo))
+                    if (Wait(ref wo))
                     {
                         currentOrder = null;
                     }
@@ -140,23 +156,6 @@ namespace controller
                 default:
                     Debug.Log("Unhandled order on [InnocentController]");
                     break;
-            }
-        }
-
-        private void OnCollisionEnter2D(Collision2D other)
-        {
-            if (other.gameObject.GetComponent<Player>())
-            {
-                ConvertToAlly();
-                Destroy(gameObject);
-                gameObject.SetActive(false);
-            }
-            else if (other.gameObject.GetComponent<Zombie>())
-            {
-                gameObject.SetActive(false);
-
-                ConvertToZombie();
-                Destroy(gameObject);
             }
         }
     }

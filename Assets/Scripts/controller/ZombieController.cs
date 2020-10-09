@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using character;
 using controller.ai;
+using managers;
 using orders;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace controller
 {
@@ -14,23 +13,28 @@ namespace controller
         public event Action<ZombieController> OnDeath;
         public event Action<ZombieController> OnNeedsOrders;
 
-        private List<GameCharacter> targets = new List<GameCharacter>();
+        private TargetManager targetManager = new TargetManager();
 
-        [FormerlySerializedAs("currentMode")]
         [SerializeField]
         private ZombieState currentState = ZombieState.Shamble;
 
+        private ZombieManager zombieManager = null;
         private Zombie controlledZombie = null;
         private ActivatedZone activatedZone = null;
 
         // Getters
-        public ZombieState GetCurrentMode() => currentState;
-        public GameCharacter GetTarget() => targets.Count > 0 ? targets.First() : null;
+        public ZombieState GetState() => currentState;
+
+        public GameCharacter GetTarget()
+        {
+            return targetManager.GetTarget();
+        }
 
         private void Start()
         {
             base.Start();
 
+            zombieManager = GetComponentInParent<ZombieManager>();
             controlledZombie = GetComponent<Zombie>();
             controlledZombie.OnDeath += () => OnDeath?.Invoke(this);
 
@@ -45,13 +49,25 @@ namespace controller
             activatedZone.OnTriggerExited -= OnExitedChaseZone;
         }
 
-        public void SetCurrentMode(ZombieState state)
+        public void SetState(ZombieState state)
         {
             if (state != currentState)
             {
                 currentState = state;
                 controlledZombie.SetMode(currentState);
                 DumpOrders();
+            }
+        }
+
+        public void CalculateState()
+        {
+            if (targetManager.TargetCount() > 0)
+            {
+                SetState(ZombieState.Chase);
+            }
+            else
+            {
+                SetState(zombieManager.GetGlobalState());
             }
         }
 
@@ -63,61 +79,26 @@ namespace controller
 
         private void OnEnteredChaseZone(Collider2D other)
         {
-            if (other.CompareTag("Player"))
+            GameCharacter gc = other.GetComponent<GameCharacter>();
+            if (other.CompareTag("Player") || other.CompareTag("Innocent") || other.CompareTag("Ally"))
             {
-                if (currentState != ZombieState.Combat)
-                {
-                    SetCurrentMode(ZombieState.Chase);
-                }
-
-                if (!targets.Contains(other.GetComponent<Player>()))
-                {
-                    targets.Add(other.GetComponent<Player>());
-                }
-            }
-            else if (other.CompareTag("Innocent"))
-            {
-                if (currentState != ZombieState.Combat)
-                {
-                    SetCurrentMode(ZombieState.Chase);
-                }
-
-                if (!targets.Contains(other.GetComponent<Innocent>()))
-                {
-                    targets.Add(other.GetComponent<Innocent>());
-                }
+                targetManager.AddTarget(other.GetComponent<Player>());
+                CalculateState();
             }
         }
 
         private void OnExitedChaseZone(Collider2D other)
         {
-            if (other.GetComponent<GameCharacter>() is Player p)
+            GameCharacter gc = other.GetComponent<GameCharacter>();
+            if (gc)
             {
-                targets.Remove(p);
-                if (currentOrder is ChaseOrder co && co.target == p)
+                targetManager.RemoveTarget(gc);
+                if (currentOrder is ChaseOrder co && co.target == gc)
                 {
                     DumpOrders();
                 }
 
-                if (currentState != ZombieState.Combat && targets.Count == 0)
-                {
-                    SetCurrentMode(ZombieState.Shamble);
-                    AddOrder(new WaitOrder(0.25f));
-                }
-            }
-            else if (other.GetComponent<GameCharacter>() is Innocent inn)
-            {
-                targets.Remove(inn);
-                if (currentOrder is ChaseOrder co && co.target == inn)
-                {
-                    DumpOrders();
-                }
-
-                if (currentState != ZombieState.Combat && targets.Count == 0)
-                {
-                    SetCurrentMode(ZombieState.Shamble);
-                    AddOrder(new WaitOrder(0.25f));
-                }
+                CalculateState();
             }
         }
 
@@ -147,7 +128,7 @@ namespace controller
             {
                 case MoveOrder mo:
                 {
-                    if (MoveTowards(mo))
+                    if (Move(mo))
                     {
                         currentOrder = null;
                     }
@@ -156,7 +137,7 @@ namespace controller
                 }
                 case WaitOrder wo:
                 {
-                    if (WaitAround(ref wo))
+                    if (Wait(ref wo))
                     {
                         currentOrder = null;
                     }
@@ -165,13 +146,89 @@ namespace controller
                 }
                 case ChaseOrder co:
                 {
-                    if (ChaseTowards(co))
+                    if (Chase(co))
                     {
                         currentOrder = null;
                     }
 
                     break;
                 }
+            }
+        }
+
+
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            PlayerController playerController = other.gameObject.GetComponent<PlayerController>();
+            if (playerController)
+            {
+                // Do damage to player
+            }
+
+            InnocentController innocentController = other.gameObject.GetComponent<InnocentController>();
+            if (innocentController)
+            {
+                innocentController.ConvertToZombie();
+            }
+        }
+
+        internal class TargetManager
+        {
+            private List<GameCharacter> targets = new List<GameCharacter>();
+            private bool dirty = false;
+
+            public void AddTarget(GameCharacter target)
+            {
+                if (!targets.Contains(target))
+                {
+                    targets.Add(target);
+                }
+            }
+
+            public void RemoveTarget(GameCharacter target)
+            {
+                if (targets.Contains(target))
+                {
+                    dirty = true;
+                    targets.Remove(target);
+                }
+            }
+
+            public int TargetCount()
+            {
+                SanitizeList();
+                return targets.Count;
+            }
+
+            private void SanitizeList()
+            {
+                if (dirty)
+                {
+                    List<GameCharacter> newTargets = new List<GameCharacter>();
+                    for (int i = 0; i < targets.Count; i++)
+                    {
+                        if (targets[i] != null)
+                        {
+                            newTargets.Add(targets[i]);
+                        }
+                    }
+
+                    dirty = false;
+                    targets = newTargets;
+                }
+            }
+
+            public GameCharacter GetTarget()
+            {
+                for (int i = 0; i < targets.Count; i++)
+                {
+                    if (targets[i] != null)
+                    {
+                        return targets[i];
+                    }
+                }
+
+                return null;
             }
         }
     }

@@ -8,12 +8,6 @@ using Random = UnityEngine.Random;
 
 namespace managers
 {
-    [Serializable]
-    public enum GlobalZombieMode
-    {
-        Shamble,
-        Combat
-    }
 
     public class ZombieManager : AIManager<ZombieController>
     {
@@ -23,19 +17,18 @@ namespace managers
         [SerializeField]
         private ZombieManagerConfig config;
 
-        [SerializeField]
-        private GlobalZombieMode currentMode = GlobalZombieMode.Shamble;
+        private ZombieState globalZombieState = ZombieState.Shamble;
 
 
         private void Start()
         {
             base.Start();
 
-            foreach (ZombieController zomby in controllers)
+            foreach (ZombieController zombieController in controllers)
             {
-                zomby.SetSearchRange(config.shambleSearchRange);
-                zomby.OnNeedsOrders += CreateZombieOrders;
-                zomby.OnDeath += RemoveController;
+                zombieController.SetSearchRange(config.shambleSearchRange);
+                zombieController.OnNeedsOrders += CreateZombieOrders;
+                zombieController.OnDeath += RemoveController;
             }
         }
 
@@ -48,10 +41,10 @@ namespace managers
         {
             if (phase == GameRoundPhase.Combat)
             {
-                currentMode = GlobalZombieMode.Combat;
+                globalZombieState = ZombieState.Combat;
                 foreach (ZombieController zombieController in controllers)
                 {
-                    zombieController.SetCurrentMode(ZombieState.Combat);
+                    zombieController.SetState(ZombieState.Combat);
                     zombieController.SetSearchRange(config.combatSearchRange);
                 }
             }
@@ -60,15 +53,15 @@ namespace managers
 
         private void CreateZombieOrders(ZombieController zombieController)
         {
-            if (currentMode == GlobalZombieMode.Combat && zombieController.GetCurrentMode() != ZombieState.Combat)
+            if (globalZombieState == ZombieState.Combat && zombieController.GetState() != ZombieState.Combat)
             {
-                zombieController.SetCurrentMode(ZombieState.Combat);
+                zombieController.SetState(ZombieState.Combat);
                 zombieController.SetSearchRange(config.combatSearchRange);
             }
 
             if (zombieController.NeedsOrder())
             {
-                switch (zombieController.GetCurrentMode())
+                switch (zombieController.GetState())
                 {
                     case ZombieState.Shamble:
                         CreateShambleOrders(zombieController);
@@ -136,6 +129,11 @@ namespace managers
 
             controller.OnNeedsOrders += CreateZombieOrders;
             controller.OnDeath += RemoveController;
+        }
+
+        public ZombieState GetGlobalState()
+        {
+            return globalZombieState;
         }
     }
 }

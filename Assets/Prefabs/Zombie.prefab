@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1671069285514178737}
   - component: {fileID: 1671069285514178736}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Shamble
   m_TagString: Zombie
   m_Icon: {fileID: 0}
@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 8325642059385210965}
   - component: {fileID: 2136955969}
   - component: {fileID: 2136955970}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Zombie
   m_TagString: Zombie
   m_Icon: {fileID: 0}
@@ -195,7 +195,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8465715584641006896}
   - component: {fileID: 5509155690567727851}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Chase
   m_TagString: Zombie
   m_Icon: {fileID: 0}
@@ -278,7 +278,7 @@ GameObject:
   - component: {fileID: 7159476772416167052}
   - component: {fileID: 7819574999337676673}
   - component: {fileID: 3363488327451477017}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: ChaseZone
   m_TagString: Zombie
   m_Icon: {fileID: 0}

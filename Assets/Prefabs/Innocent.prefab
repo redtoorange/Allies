@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7201505724802839200}
   - component: {fileID: 8243631531757037703}
   - component: {fileID: 8050324626341977912}
-  m_Layer: 6
+  m_Layer: 9
   m_Name: RunZone
   m_TagString: Innocent
   m_Icon: {fileID: 0}
@@ -70,7 +70,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3460978395614573104}
   - component: {fileID: 3460978395614573105}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: NeutralSprite
   m_TagString: Innocent
   m_Icon: {fileID: 0}
@@ -155,7 +155,7 @@ GameObject:
   - component: {fileID: 5639727470703951225}
   - component: {fileID: 590074830666837917}
   - component: {fileID: 3721598477971764675}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Innocent
   m_TagString: Innocent
   m_Icon: {fileID: 0}
@@ -254,7 +254,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8617005830280740965}
   - component: {fileID: 1659300226238239739}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: RuningSprite
   m_TagString: Innocent
   m_Icon: {fileID: 0}

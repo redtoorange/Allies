@@ -2,6 +2,9 @@ namespace character
 {
     public enum AllyState
     {
+        Neutral,
+        Follow,
+        Combat
     }
 
     /// <summary>

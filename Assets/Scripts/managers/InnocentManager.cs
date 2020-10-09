@@ -1,11 +1,14 @@
-﻿using character;
+﻿using System;
+using character;
 using controller;
 using orders;
 using scriptable;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace managers
 {
+    [Serializable]
     public enum InnocentConvertedTo
     {
         Ally,
@@ -18,6 +21,7 @@ namespace managers
         private InnocentManagerConfig config;
 
         private GameRoundPhase currentPhase = GameRoundPhase.Recruitment;
+        private InnocentState globalInnocentState = InnocentState.Neutral;
 
         private void Start()
         {
@@ -36,9 +40,11 @@ namespace managers
             if (phase == GameRoundPhase.Combat)
             {
                 currentPhase = GameRoundPhase.Combat;
+                globalInnocentState = InnocentState.Combat;
+
                 foreach (InnocentController innocent in controllers)
                 {
-                    innocent.SetMode(InnocentState.Running);
+                    innocent.SetState(InnocentState.Combat);
                 }
             }
         }
@@ -58,13 +64,21 @@ namespace managers
 
         private void OnNeedsOrderHandler(InnocentController innocent)
         {
-            switch (innocent.GetMode())
+            if (globalInnocentState == InnocentState.Combat && innocent.GetState() != InnocentState.Combat)
+            {
+                innocent.SetState(InnocentState.Combat);
+            }
+
+            switch (innocent.GetState())
             {
                 case InnocentState.Neutral:
                     CreateWanderOrders(innocent);
                     break;
                 case InnocentState.Running:
                     CreateRunOrders(innocent);
+                    break;
+                case InnocentState.Combat:
+                    CreateCombatOrders(innocent);
                     break;
             }
         }
@@ -89,16 +103,22 @@ namespace managers
             {
                 innocentController.AddOrder(new RunOrder(threat, config.runSpeed));
             }
-            else if (currentPhase == GameRoundPhase.Combat)
-            {
-                Vector2 destination = new Vector2(
-                    Random.Range(-config.combatRange, config.combatRange),
-                    Random.Range(-config.combatRange, config.combatRange)
-                );
+        }
 
-                innocentController.AddOrder(new MoveOrder(innocentController.GetPosition() + destination,
-                    config.combatSpeed));
-            }
+        private void CreateCombatOrders(InnocentController innocentController)
+        {
+            Vector2 destination = new Vector2(
+                Random.Range(-config.combatRange, config.combatRange),
+                Random.Range(-config.combatRange, config.combatRange)
+            );
+
+            innocentController.AddOrder(new MoveOrder(innocentController.GetPosition() + destination,
+                config.combatSpeed));
+        }
+
+        public InnocentState GetGlobalState()
+        {
+            return globalInnocentState;
         }
     }
 }

@@ -36,45 +36,89 @@ namespace controller
 
         protected abstract void HandleOrder(Order order);
 
-        protected bool MoveTowards(MoveOrder mo)
+        protected bool Move(MoveOrder mo)
         {
             Vector2 position = rigidbody2D.position;
             Vector2 dir = mo.pos - position;
             rigidbody2D.MovePosition(position + (dir.normalized * (mo.spd * Time.fixedDeltaTime)));
 
-            // Detect if the Zombie has stalled
+            // Detect Stalled Movement
             if (Vector2.Distance(rigidbody2D.position, positionLastFrame) < stallThreshold)
             {
+                positionLastFrame = new Vector2(float.MinValue, float.MinValue);
                 return true;
             }
 
             positionLastFrame = rigidbody2D.position;
+
             return Vector2.Distance(positionLastFrame, mo.pos) < movementThreshold;
         }
 
-        protected bool ChaseTowards(ChaseOrder co)
+        protected bool Chase(ChaseOrder co)
         {
             Vector2 position = rigidbody2D.position;
             Vector2 dir = co.target.GetPosition() - position;
             rigidbody2D.MovePosition(position + (dir.normalized * (co.spd * Time.fixedDeltaTime)));
 
-            return Vector2.Distance(rigidbody2D.position, co.target.GetPosition()) < movementThreshold;
+            // Detect Stalled Movement
+            if (Vector2.Distance(rigidbody2D.position, positionLastFrame) < stallThreshold)
+            {
+                Debug.Log("Stall Detected");
+                positionLastFrame = new Vector2(float.MinValue, float.MinValue);
+                return true;
+            }
+
+            positionLastFrame = rigidbody2D.position;
+
+            return Vector2.Distance(positionLastFrame, co.target.GetPosition()) < movementThreshold;
         }
 
-        protected bool WaitAround(ref WaitOrder wo)
+        protected bool Wait(ref WaitOrder wo)
         {
             wo.amount -= Time.fixedDeltaTime;
 
             return wo.amount <= 0;
         }
 
-        protected bool RunAway(RunOrder ro)
+        protected bool Run(RunOrder ro)
         {
             Vector2 position = rigidbody2D.position;
             Vector2 dir = position - ro.target.GetPosition();
             rigidbody2D.MovePosition(position + (dir.normalized * (ro.spd * Time.fixedDeltaTime)));
 
-            return Vector2.Distance(rigidbody2D.position, ro.target.GetPosition()) < movementThreshold;
+            // Detect Stalled Movement
+            if (Vector2.Distance(rigidbody2D.position, positionLastFrame) < stallThreshold)
+            {
+                positionLastFrame = new Vector2(float.MinValue, float.MinValue);
+                return true;
+            }
+
+            positionLastFrame = rigidbody2D.position;
+
+            return Vector2.Distance(positionLastFrame, ro.target.GetPosition()) < movementThreshold;
+        }
+
+        protected bool Follow(FollowOrder fo)
+        {
+            if (Mathf.Abs(Vector2.Distance(rigidbody2D.position, fo.player.GetPosition())) > fo.haltDistance)
+            {
+                Vector2 position = rigidbody2D.position;
+                Vector2 dir = fo.player.GetPosition() - position;
+                rigidbody2D.MovePosition(position + (dir.normalized * (fo.spd * Time.fixedDeltaTime)));
+
+                // Detect Stalled Movement
+                if (Vector2.Distance(rigidbody2D.position, positionLastFrame) < stallThreshold)
+                {
+                    positionLastFrame = new Vector2(float.MinValue, float.MinValue);
+                    return true;
+                }
+
+                positionLastFrame = rigidbody2D.position;
+
+                return false;
+            }
+
+            return true;
         }
     }
 }

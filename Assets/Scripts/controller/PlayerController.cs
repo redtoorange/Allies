@@ -16,7 +16,7 @@ namespace controller
         private void Start()
         {
             camera = Camera.main;
-            
+
             bulletManager = FindObjectOfType<BulletManager>();
             rigidbody2D = GetComponent<Rigidbody2D>();
         }
@@ -41,6 +41,15 @@ namespace controller
             {
                 rigidbody2D.MovePosition(rigidbody2D.position +
                                          (inputDelta.normalized * (Time.fixedDeltaTime * speed)));
+            }
+        }
+
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            InnocentController innocentController = other.gameObject.GetComponent<InnocentController>();
+            if (innocentController)
+            {
+                innocentController.ConvertToAlly();
             }
         }
     }
