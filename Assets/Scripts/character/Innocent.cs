@@ -1,7 +1,4 @@
-﻿using System;
-using bullet;
-using controller;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace character
 {
@@ -22,7 +19,7 @@ namespace character
 
         [SerializeField]
         private SpriteRenderer runningSprite;
-        
+
         private void Start()
         {
             base.Start();
@@ -30,6 +27,8 @@ namespace character
 
         public void SetMode(InnocentState state)
         {
+            if (neutralSprite == null || runningSprite == null) return;
+
             if (state == InnocentState.Neutral)
             {
                 neutralSprite.gameObject.SetActive(true);

@@ -6,12 +6,13 @@ using controller.ai;
 using managers;
 using orders;
 using UnityEngine;
+using util;
 
 namespace controller
 {
     public class InnocentController : AIController
     {
-        public event Action<InnocentController> OnDeath;
+        public event Action<InnocentController> OnControllerDeath;
         public event Action<InnocentController> OnNeedsOrders;
         public event Action<InnocentController, InnocentConvertedTo> OnConverted;
 
@@ -19,10 +20,12 @@ namespace controller
         private Innocent controlledInnocent = null;
         private ActivatedZone activatedZone = null;
 
-        private readonly List<Zombie> threats = new List<Zombie>();
+        [SerializeField]
+        private TargetManager<Zombie> targetManager = new TargetManager<Zombie>();
+
         private InnocentState currentState = InnocentState.Neutral;
 
-        public Zombie GetThreat() => threats.Count > 0 ? threats.First() : null;
+        public Zombie GetThreat() => targetManager.GetTarget();
 
         private void Start()
         {
@@ -30,12 +33,18 @@ namespace controller
 
             manager = GetComponentInParent<InnocentManager>();
             controlledInnocent = GetComponent<Innocent>();
-            controlledInnocent.OnDeath += () => OnDeath?.Invoke(this);
+            // controlledInnocent.OnCharacterDestroyed += HandleGameCharacterCharacterDestroyed;
 
             activatedZone = GetComponentInChildren<ActivatedZone>();
             activatedZone.OnTriggerEntered += OnEnteredRunZone;
             activatedZone.OnTriggerExited += OnExitedRunZone;
         }
+
+        // Don't need to signal up to manager, innocent can only be converted, never die
+        // private void HandleGameCharacterCharacterDestroyed(GameCharacter gc)
+        // {
+            // OnControllerDeath?.Invoke(this);
+        // }
 
         public InnocentState GetState() => currentState;
 
@@ -48,7 +57,7 @@ namespace controller
 
             if (newState != currentState)
             {
-                if (currentState == InnocentState.Running && threats.Count != 0)
+                if (currentState == InnocentState.Running && targetManager.TargetCount() != 0)
                 {
                     Debug.Log("Cannot changes state with threats in range");
                 }
@@ -65,6 +74,7 @@ namespace controller
         {
             gameObject.SetActive(false);
             OnConverted?.Invoke(this, InnocentConvertedTo.Zombie);
+            controlledInnocent.DestroyingCharacter();
             Destroy(gameObject);
         }
 
@@ -72,6 +82,7 @@ namespace controller
         {
             gameObject.SetActive(false);
             OnConverted?.Invoke(this, InnocentConvertedTo.Ally);
+            controlledInnocent.DestroyingCharacter();
             Destroy(gameObject);
         }
 
@@ -79,11 +90,7 @@ namespace controller
         {
             if (other.GetComponent<GameCharacter>() is Zombie z)
             {
-                if (!threats.Contains(z))
-                {
-                    threats.Add(z);
-                }
-
+                targetManager.AddTarget(z);
                 SetState(InnocentState.Running);
             }
         }
@@ -92,12 +99,11 @@ namespace controller
         {
             if (other.GetComponent<GameCharacter>() is Zombie z)
             {
-                threats.Remove(z);
                 if (currentOrder is RunOrder ro && ro.target == z)
                 {
                     DumpOrders();
                 }
-
+                targetManager.RemoveTarget(z);
                 SetState(InnocentState.Neutral);
             }
         }

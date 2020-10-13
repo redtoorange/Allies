@@ -1,5 +1,4 @@
 using System;
-using bullet;
 using UnityEngine;
 
 namespace character
@@ -30,6 +29,8 @@ namespace character
 
         public void SetMode(ZombieState state)
         {
+            if (shambleSprite == null || chaseSprite == null) return;
+
             if (state == ZombieState.Shamble)
             {
                 shambleSprite.gameObject.SetActive(true);

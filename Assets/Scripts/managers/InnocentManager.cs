@@ -31,7 +31,7 @@ namespace managers
             {
                 innocent.OnConverted += OnInnocentConverted;
                 innocent.OnNeedsOrders += OnNeedsOrderHandler;
-                innocent.OnDeath += RemoveController;
+                innocent.OnControllerDeath += RemoveController;
             }
         }
 

@@ -56,6 +56,8 @@ namespace controller
 
         protected bool Chase(ChaseOrder co)
         {
+            if (co.target == null || co.target.gameObject == null) return true;
+            
             Vector2 position = rigidbody2D.position;
             Vector2 dir = co.target.GetPosition() - position;
             rigidbody2D.MovePosition(position + (dir.normalized * (co.spd * Time.fixedDeltaTime)));
@@ -82,6 +84,8 @@ namespace controller
 
         protected bool Run(RunOrder ro)
         {
+            if (ro.target == null || ro.target.gameObject == null) return true;
+            
             Vector2 position = rigidbody2D.position;
             Vector2 dir = position - ro.target.GetPosition();
             rigidbody2D.MovePosition(position + (dir.normalized * (ro.spd * Time.fixedDeltaTime)));
@@ -100,6 +104,8 @@ namespace controller
 
         protected bool Follow(FollowOrder fo)
         {
+            if (fo.player == null || fo.player.gameObject == null) return true;
+            
             if (Mathf.Abs(Vector2.Distance(rigidbody2D.position, fo.player.GetPosition())) > fo.haltDistance)
             {
                 Vector2 position = rigidbody2D.position;

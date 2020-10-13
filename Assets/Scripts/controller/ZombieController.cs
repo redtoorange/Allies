@@ -5,6 +5,7 @@ using controller.ai;
 using managers;
 using orders;
 using UnityEngine;
+using util;
 
 namespace controller
 {
@@ -13,7 +14,8 @@ namespace controller
         public event Action<ZombieController> OnDeath;
         public event Action<ZombieController> OnNeedsOrders;
 
-        private TargetManager targetManager = new TargetManager();
+        [SerializeField]
+        private TargetManager<GameCharacter> targetManager = new TargetManager<GameCharacter>();
 
         [SerializeField]
         private ZombieState currentState = ZombieState.Shamble;
@@ -36,17 +38,25 @@ namespace controller
 
             zombieManager = GetComponentInParent<ZombieManager>();
             controlledZombie = GetComponent<Zombie>();
-            controlledZombie.OnDeath += () => OnDeath?.Invoke(this);
+            controlledZombie.OnCharacterDestroyed += (_) => OnDeath?.Invoke(this);
 
             activatedZone = GetComponentInChildren<ActivatedZone>();
             activatedZone.OnTriggerEntered += OnEnteredChaseZone;
-            activatedZone.OnTriggerExited += OnExitedChaseZone;
+            // activatedZone.OnTriggerExited += OnExitedChaseZone;
         }
 
         private void OnDisable()
         {
             activatedZone.OnTriggerEntered -= OnEnteredChaseZone;
-            activatedZone.OnTriggerExited -= OnExitedChaseZone;
+            // activatedZone.OnTriggerExited -= OnExitedChaseZone;
+        }
+        
+        private void OnDestroy()
+        {
+            foreach (GameCharacter gameCharacter in targetManager.GetTargets())
+            {
+                gameCharacter.OnCharacterDestroyed -= RemoveTarget;
+            }
         }
 
         public void SetState(ZombieState state)
@@ -80,27 +90,41 @@ namespace controller
         private void OnEnteredChaseZone(Collider2D other)
         {
             GameCharacter gc = other.GetComponent<GameCharacter>();
-            if (other.CompareTag("Player") || other.CompareTag("Innocent") || other.CompareTag("Ally"))
+            if (gc != null && (gc.CompareTag("Player") || gc.CompareTag("Innocent") || gc.CompareTag("Ally")))
             {
-                targetManager.AddTarget(other.GetComponent<Player>());
+                targetManager.AddTarget(gc);
                 CalculateState();
+                gc.OnCharacterDestroyed += RemoveTarget;
             }
         }
 
-        private void OnExitedChaseZone(Collider2D other)
+       
+
+        private void RemoveTarget(GameCharacter gc)
         {
-            GameCharacter gc = other.GetComponent<GameCharacter>();
-            if (gc)
+            if (currentOrder is ChaseOrder co && (co.target == gc || co.target == null))
             {
-                targetManager.RemoveTarget(gc);
-                if (currentOrder is ChaseOrder co && co.target == gc)
-                {
-                    DumpOrders();
-                }
-
-                CalculateState();
+                DumpOrders();
             }
+            targetManager.RemoveTarget(gc);
+            gc.OnCharacterDestroyed -= RemoveTarget;
+            CalculateState();
         }
+
+        // private void OnExitedChaseZone(Collider2D other)
+        // {
+        //     GameCharacter gc = other.GetComponent<GameCharacter>();
+        //     if (gc)
+        //     {
+        //         targetManager.RemoveTarget(gc);
+        //         if (currentOrder is ChaseOrder co && co.target == gc)
+        //         {
+        //             DumpOrders();
+        //         }
+        //
+        //         CalculateState();
+        //     }
+        // }
 
         private void FixedUpdate()
         {
@@ -169,66 +193,6 @@ namespace controller
             if (innocentController)
             {
                 innocentController.ConvertToZombie();
-            }
-        }
-
-        internal class TargetManager
-        {
-            private List<GameCharacter> targets = new List<GameCharacter>();
-            private bool dirty = false;
-
-            public void AddTarget(GameCharacter target)
-            {
-                if (!targets.Contains(target))
-                {
-                    targets.Add(target);
-                }
-            }
-
-            public void RemoveTarget(GameCharacter target)
-            {
-                if (targets.Contains(target))
-                {
-                    dirty = true;
-                    targets.Remove(target);
-                }
-            }
-
-            public int TargetCount()
-            {
-                SanitizeList();
-                return targets.Count;
-            }
-
-            private void SanitizeList()
-            {
-                if (dirty)
-                {
-                    List<GameCharacter> newTargets = new List<GameCharacter>();
-                    for (int i = 0; i < targets.Count; i++)
-                    {
-                        if (targets[i] != null)
-                        {
-                            newTargets.Add(targets[i]);
-                        }
-                    }
-
-                    dirty = false;
-                    targets = newTargets;
-                }
-            }
-
-            public GameCharacter GetTarget()
-            {
-                for (int i = 0; i < targets.Count; i++)
-                {
-                    if (targets[i] != null)
-                    {
-                        return targets[i];
-                    }
-                }
-
-                return null;
             }
         }
     }

@@ -97,6 +97,10 @@ namespace managers
                 zombieController.AddOrder(new WaitOrder(Random.Range(config.chaseWait.x, config.chaseWait.y)));
                 zombieController.AddOrder(new ChaseOrder(target, config.chaseSpeed));
             }
+            else
+            {
+                Debug.Log("Null target");
+            }
         }
 
         private void CreateCombatOrders(ZombieController zombieController)
