@@ -9,9 +9,10 @@ namespace controller
         [SerializeField]
         private float speed = 10.0f;
 
-        private Rigidbody2D rigidbody2D = null;
-        private BulletManager bulletManager = null;
-        private Camera camera = null;
+        private BulletManager bulletManager;
+        private Camera camera;
+
+        private Rigidbody2D rigidbody2D;
 
         private void Start()
         {
@@ -32,25 +33,20 @@ namespace controller
 
         private void FixedUpdate()
         {
-            Vector2 inputDelta = Vector2.zero;
+            var inputDelta = Vector2.zero;
 
             inputDelta.x = Input.GetAxisRaw("Horizontal");
             inputDelta.y = Input.GetAxisRaw("Vertical");
 
             if (inputDelta.sqrMagnitude > 0)
-            {
                 rigidbody2D.MovePosition(rigidbody2D.position +
-                                         (inputDelta.normalized * (Time.fixedDeltaTime * speed)));
-            }
+                                         inputDelta.normalized * (Time.fixedDeltaTime * speed));
         }
 
         private void OnCollisionEnter2D(Collision2D other)
         {
-            InnocentController innocentController = other.gameObject.GetComponent<InnocentController>();
-            if (innocentController)
-            {
-                innocentController.ConvertToAlly();
-            }
+            var innocentController = other.gameObject.GetComponent<InnocentController>();
+            if (innocentController) innocentController.ConvertToAlly();
         }
     }
 }

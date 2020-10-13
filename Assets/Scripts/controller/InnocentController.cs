@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using character;
 using controller.ai;
 using managers;
+using managers.factories;
 using orders;
+using scriptable;
 using UnityEngine;
 using util;
 
@@ -12,20 +12,18 @@ namespace controller
 {
     public class InnocentController : AIController
     {
-        public event Action<InnocentController> OnControllerDeath;
-        public event Action<InnocentController> OnNeedsOrders;
-        public event Action<InnocentController, InnocentConvertedTo> OnConverted;
-
-        private InnocentManager manager = null;
-        private Innocent controlledInnocent = null;
-        private ActivatedZone activatedZone = null;
+        [SerializeField]
+        private InnocentManagerConfig config;
 
         [SerializeField]
         private TargetManager<Zombie> targetManager = new TargetManager<Zombie>();
 
+        private ActivatedZone activatedZone;
+        private Innocent controlledInnocent;
+
         private InnocentState currentState = InnocentState.Neutral;
 
-        public Zombie GetThreat() => targetManager.GetTarget();
+        private InnocentManager manager;
 
         private void Start()
         {
@@ -40,10 +38,34 @@ namespace controller
             activatedZone.OnTriggerExited += OnExitedRunZone;
         }
 
+        private void FixedUpdate()
+        {
+            if (NeedsOrder())
+            {
+                CreateInnocentOrders();
+            }
+            else
+            {
+                if (currentOrder == null && orders.Count > 0)
+                {
+                    currentOrder = orders.Dequeue();
+                }
+
+                if (currentOrder != null)
+                {
+                    HandleOrder(currentOrder);
+                }
+            }
+        }
+
+        public event Action<InnocentController, InnocentConvertedTo> OnConverted;
+
+        public Zombie GetThreat() => targetManager.GetTarget();
+
         // Don't need to signal up to manager, innocent can only be converted, never die
         // private void HandleGameCharacterCharacterDestroyed(GameCharacter gc)
         // {
-            // OnControllerDeath?.Invoke(this);
+        // OnControllerDeath?.Invoke(this);
         // }
 
         public InnocentState GetState() => currentState;
@@ -103,28 +125,9 @@ namespace controller
                 {
                     DumpOrders();
                 }
+
                 targetManager.RemoveTarget(z);
                 SetState(InnocentState.Neutral);
-            }
-        }
-
-        private void FixedUpdate()
-        {
-            if (NeedsOrder())
-            {
-                OnNeedsOrders?.Invoke(this);
-            }
-            else
-            {
-                if (currentOrder == null && orders.Count > 0)
-                {
-                    currentOrder = orders.Dequeue();
-                }
-
-                if (currentOrder != null)
-                {
-                    HandleOrder(currentOrder);
-                }
             }
         }
 
@@ -161,6 +164,28 @@ namespace controller
                 }
                 default:
                     Debug.Log("Unhandled order on [InnocentController]");
+                    break;
+            }
+        }
+
+        private void CreateInnocentOrders()
+        {
+            if (manager.GetGlobalState() == InnocentState.Combat && GetState() != InnocentState.Combat)
+            {
+                SetState(InnocentState.Combat);
+            }
+
+            switch (GetState())
+            {
+                case InnocentState.Neutral:
+                    orders.Enqueue(InnocentOrderFactory.CreateWanderOrder(this, config));
+                    orders.Enqueue(InnocentOrderFactory.CreateWaitOrder(this, config));
+                    break;
+                case InnocentState.Running:
+                    orders.Enqueue(InnocentOrderFactory.CreateRunOrders(this, config));
+                    break;
+                case InnocentState.Combat:
+                    orders.Enqueue(InnocentOrderFactory.CreateCombatOrders(this, config));
                     break;
             }
         }

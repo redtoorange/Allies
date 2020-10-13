@@ -4,6 +4,5 @@ namespace managers
 {
     public class PlayerManager : MonoBehaviour
     {
-
     }
 }

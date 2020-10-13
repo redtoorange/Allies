@@ -5,9 +5,9 @@ namespace managers
 {
     public abstract class AIManager<T> : MonoBehaviour
     {
-        protected GameManager gameManager = null;
-        protected List<T> controllers = null;
-        protected GameRoundManager grm = null;
+        protected List<T> controllers;
+        protected GameManager gameManager;
+        protected GameRoundManager grm;
 
         protected void Start()
         {

@@ -4,8 +4,8 @@ namespace orders
 {
     public class ChaseOrder : Order
     {
-        public GameCharacter target;
         public float spd;
+        public GameCharacter target;
 
         public ChaseOrder(GameCharacter target, float spd)
         {

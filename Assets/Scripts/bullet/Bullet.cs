@@ -6,23 +6,45 @@ namespace bullet
     {
         [SerializeField]
         private int damageAmount = 1;
-        
+
         [SerializeField]
         private float travelSpeed = 1.0f;
 
         [SerializeField]
         private float timeToLive = 3.0f;
 
-        private GameObject ignore = null;
-        private Vector2 startPosition = new Vector2(-1000, -1000);
         private Vector2 direction = Vector2.zero;
+        private bool fired;
 
-        private Rigidbody2D rigidbody2D = null;
-        private bool fired = false;
+        private GameObject ignore;
+
+        private Rigidbody2D rigidbody2D;
+        private Vector2 startPosition = new Vector2(-1000, -1000);
+
+        private void FixedUpdate()
+        {
+            if (!fired) return;
+
+            rigidbody2D.MovePosition(
+                rigidbody2D.position + direction.normalized * (travelSpeed * Time.fixedDeltaTime));
+        }
 
         private void OnEnable()
         {
             rigidbody2D = GetComponent<Rigidbody2D>();
+        }
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.gameObject != ignore)
+            {
+                var d = other.GetComponent<IDamageable>();
+                if (d != null)
+                {
+                    d.TakeDamage(damageAmount);
+                    ResetBullet();
+                }
+            }
         }
 
         public void PrimeBullet(GameObject ignore, Vector2 startPosition, Vector2 direction)
@@ -48,27 +70,6 @@ namespace bullet
         {
             fired = true;
             Invoke(nameof(ResetBullet), timeToLive);
-        }
-
-        private void FixedUpdate()
-        {
-            if (!fired) return;
-
-            rigidbody2D.MovePosition(
-                rigidbody2D.position + (direction.normalized * (travelSpeed * Time.fixedDeltaTime)));
-        }
-
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            if (other.gameObject != ignore)
-            {
-                IDamageable d = other.GetComponent<IDamageable>();
-                if (d != null)
-                {
-                    d.TakeDamage(damageAmount);
-                    ResetBullet();
-                }
-            }
         }
     }
 }

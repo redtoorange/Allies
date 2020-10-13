@@ -6,21 +6,28 @@ namespace controller
 {
     public abstract class AIController : MonoBehaviour
     {
-        private float movementThreshold = 0.1f;
-        private float stallThreshold = 0.001f;
-        private Vector2 positionLastFrame = new Vector2(float.MinValue, float.MinValue);
+        protected Order currentOrder;
+        private readonly float movementThreshold = 0.1f;
 
         protected Queue<Order> orders = new Queue<Order>();
-        protected Order currentOrder = null;
-        protected Rigidbody2D rigidbody2D = null;
-
-        public Vector2 GetPosition() => rigidbody2D.position;
-        public bool NeedsOrder() => orders.Count == 0 && currentOrder == null;
+        private Vector2 positionLastFrame = new Vector2(float.MinValue, float.MinValue);
+        protected Rigidbody2D rigidbody2D;
+        private readonly float stallThreshold = 0.001f;
 
 
         protected void Start()
         {
             rigidbody2D = GetComponent<Rigidbody2D>();
+        }
+
+        public Vector2 GetPosition()
+        {
+            return rigidbody2D.position;
+        }
+
+        public bool NeedsOrder()
+        {
+            return orders.Count == 0 && currentOrder == null;
         }
 
         protected void DumpOrders()
@@ -38,9 +45,9 @@ namespace controller
 
         protected bool Move(MoveOrder mo)
         {
-            Vector2 position = rigidbody2D.position;
-            Vector2 dir = mo.pos - position;
-            rigidbody2D.MovePosition(position + (dir.normalized * (mo.spd * Time.fixedDeltaTime)));
+            var position = rigidbody2D.position;
+            var dir = mo.pos - position;
+            rigidbody2D.MovePosition(position + dir.normalized * (mo.spd * Time.fixedDeltaTime));
 
             // Detect Stalled Movement
             if (Vector2.Distance(rigidbody2D.position, positionLastFrame) < stallThreshold)
@@ -57,10 +64,10 @@ namespace controller
         protected bool Chase(ChaseOrder co)
         {
             if (co.target == null || co.target.gameObject == null) return true;
-            
-            Vector2 position = rigidbody2D.position;
-            Vector2 dir = co.target.GetPosition() - position;
-            rigidbody2D.MovePosition(position + (dir.normalized * (co.spd * Time.fixedDeltaTime)));
+
+            var position = rigidbody2D.position;
+            var dir = co.target.GetPosition() - position;
+            rigidbody2D.MovePosition(position + dir.normalized * (co.spd * Time.fixedDeltaTime));
 
             // Detect Stalled Movement
             if (Vector2.Distance(rigidbody2D.position, positionLastFrame) < stallThreshold)
@@ -85,10 +92,10 @@ namespace controller
         protected bool Run(RunOrder ro)
         {
             if (ro.target == null || ro.target.gameObject == null) return true;
-            
-            Vector2 position = rigidbody2D.position;
-            Vector2 dir = position - ro.target.GetPosition();
-            rigidbody2D.MovePosition(position + (dir.normalized * (ro.spd * Time.fixedDeltaTime)));
+
+            var position = rigidbody2D.position;
+            var dir = position - ro.target.GetPosition();
+            rigidbody2D.MovePosition(position + dir.normalized * (ro.spd * Time.fixedDeltaTime));
 
             // Detect Stalled Movement
             if (Vector2.Distance(rigidbody2D.position, positionLastFrame) < stallThreshold)
@@ -105,12 +112,12 @@ namespace controller
         protected bool Follow(FollowOrder fo)
         {
             if (fo.player == null || fo.player.gameObject == null) return true;
-            
+
             if (Mathf.Abs(Vector2.Distance(rigidbody2D.position, fo.player.GetPosition())) > fo.haltDistance)
             {
-                Vector2 position = rigidbody2D.position;
-                Vector2 dir = fo.player.GetPosition() - position;
-                rigidbody2D.MovePosition(position + (dir.normalized * (fo.spd * Time.fixedDeltaTime)));
+                var position = rigidbody2D.position;
+                var dir = fo.player.GetPosition() - position;
+                rigidbody2D.MovePosition(position + dir.normalized * (fo.spd * Time.fixedDeltaTime));
 
                 // Detect Stalled Movement
                 if (Vector2.Distance(rigidbody2D.position, positionLastFrame) < stallThreshold)

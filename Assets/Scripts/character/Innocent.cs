@@ -10,7 +10,7 @@ namespace character
     }
 
     /// <summary>
-    /// Neutral character, will move to avoid the closest zombie.
+    ///     Neutral character, will move to avoid the closest zombie.
     /// </summary>
     public class Innocent : GameCharacter
     {

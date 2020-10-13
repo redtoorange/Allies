@@ -15,20 +15,7 @@ namespace character
         [SerializeField]
         protected StatLine stats;
 
-        public event Action<GameCharacter> OnCharacterDestroyed; 
-
-        private Rigidbody2D rb2d = null;
-
-        public Vector2 GetPosition()
-        {
-            if (rb2d != null)
-            {
-                return rb2d.position;
-            }
-
-            Debug.LogError("RigidBody2D has been destroyed on " + gameObject.name);
-            return Vector2.zero;
-        }
+        private Rigidbody2D rb2d;
 
         protected void Start()
         {
@@ -43,6 +30,16 @@ namespace character
                 DestroyingCharacter();
                 Destroy(gameObject);
             }
+        }
+
+        public event Action<GameCharacter> OnCharacterDestroyed;
+
+        public Vector2 GetPosition()
+        {
+            if (rb2d != null) return rb2d.position;
+
+            Debug.LogError("RigidBody2D has been destroyed on " + gameObject.name);
+            return Vector2.zero;
         }
 
         public void DestroyingCharacter()

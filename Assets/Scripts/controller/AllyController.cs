@@ -9,14 +9,12 @@ namespace controller
 {
     public class AllyController : AIController
     {
-        public event Action<AllyController> OnDeath;
-        public event Action<AllyController> OnNeedsOrders;
+        private Ally controlledAlly;
+        private AllyState currentState = AllyState.Follow;
+        private ActivatedZone firingZone = null;
 
         private Player followedPlayer;
-        private Ally controlledAlly;
         private List<Zombie> targets = new List<Zombie>();
-        private ActivatedZone firingZone = null;
-        private AllyState currentState = AllyState.Follow;
 
         private void Start()
         {
@@ -33,17 +31,14 @@ namespace controller
             }
             else
             {
-                if (currentOrder == null && orders.Count > 0)
-                {
-                    currentOrder = orders.Dequeue();
-                }
+                if (currentOrder == null && orders.Count > 0) currentOrder = orders.Dequeue();
 
-                if (currentOrder != null)
-                {
-                    HandleOrder(currentOrder);
-                }
+                if (currentOrder != null) HandleOrder(currentOrder);
             }
         }
+
+        public event Action<AllyController> OnDeath;
+        public event Action<AllyController> OnNeedsOrders;
 
         protected override void HandleOrder(Order order)
         {
@@ -51,10 +46,7 @@ namespace controller
             {
                 case FollowOrder fo:
                 {
-                    if (Follow(fo))
-                    {
-                        currentOrder = null;
-                    }
+                    if (Follow(fo)) currentOrder = null;
 
                     break;
                 }

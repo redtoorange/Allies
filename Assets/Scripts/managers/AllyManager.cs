@@ -22,7 +22,7 @@ namespace managers
         [SerializeField]
         private AllyManagerConfig config;
 
-        private GlobalAllyState currentGlobalState = GlobalAllyState.Follow;
+        private readonly GlobalAllyState currentGlobalState = GlobalAllyState.Follow;
 
         private GameRoundPhase currentPhase = GameRoundPhase.Recruitment;
 
@@ -31,7 +31,7 @@ namespace managers
         {
             base.Start();
 
-            foreach (AllyController allyController in controllers)
+            foreach (var allyController in controllers)
             {
                 // Bind the callbacks
                 allyController.OnDeath += RemoveController;
@@ -44,7 +44,7 @@ namespace managers
             if (phase == GameRoundPhase.Combat)
             {
                 currentPhase = GameRoundPhase.Combat;
-                foreach (AllyController ally in controllers)
+                foreach (var ally in controllers)
                 {
                     ally.SetState(AllyState.Combat);
                 }
@@ -88,7 +88,7 @@ namespace managers
         // Follow the player but stay outside of a certain range
         private void CreateFollowOrders(AllyController allyController)
         {
-            Player player = allyController.GetPlayer();
+            var player = allyController.GetPlayer();
             if (player != null)
             {
                 allyController.AddOrder(new FollowOrder(player, config.followSpeed, config.haltDistance));
@@ -121,8 +121,8 @@ namespace managers
 
         public void SpawnAlly(Vector2 position)
         {
-            GameObject go = Instantiate(allyPrefab, position, Quaternion.identity, transform);
-            AllyController allyController = go.GetComponent<AllyController>();
+            var go = Instantiate(allyPrefab, position, Quaternion.identity, transform);
+            var allyController = go.GetComponent<AllyController>();
 
             AddController(go.GetComponent<AllyController>());
 

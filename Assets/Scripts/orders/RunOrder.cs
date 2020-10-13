@@ -1,12 +1,11 @@
 ﻿using character;
-using UnityEngine;
 
 namespace orders
 {
     public class RunOrder : Order
     {
-        public GameCharacter target;
         public float spd;
+        public GameCharacter target;
 
         public RunOrder(GameCharacter target, float spd)
         {

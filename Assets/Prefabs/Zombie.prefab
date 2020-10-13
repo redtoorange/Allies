@@ -147,6 +147,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 686c734a92124761916f64754971a6c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  config: {fileID: 11400000, guid: f855207adbbe1e5468bcd70584a1f21f, type: 2}
+  targetManager:
+    targets: []
+    dirty: 0
   currentState: 0
 --- !u!50 &2136955969
 Rigidbody2D:

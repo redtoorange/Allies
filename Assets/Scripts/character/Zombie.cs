@@ -12,7 +12,7 @@ namespace character
     }
 
     /// <summary>
-    /// Move toward the closest Ally or Player.  When they are contacted, they will be converted into a Zombie.
+    ///     Move toward the closest Ally or Player.  When they are contacted, they will be converted into a Zombie.
     /// </summary>
     public class Zombie : GameCharacter
     {

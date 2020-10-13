@@ -9,10 +9,10 @@ namespace bullet
         private int cacheSize = 200;
 
         [SerializeField]
-        private Bullet bulletPrefab = null;
+        private Bullet bulletPrefab;
 
-        private List<Bullet> bulletCache = null;
-        private int currentIndex = 0;
+        private List<Bullet> bulletCache;
+        private int currentIndex;
 
         private void Start()
         {
@@ -22,11 +22,11 @@ namespace bullet
         private void CreateBulletCache()
         {
             bulletCache = new List<Bullet>(cacheSize);
-            Vector2 spawnPosition = new Vector2(-1000, -1000);
+            var spawnPosition = new Vector2(-1000, -1000);
 
-            for (int i = 0; i < cacheSize; i++)
+            for (var i = 0; i < cacheSize; i++)
             {
-                Bullet bullet = Instantiate(bulletPrefab, spawnPosition, Quaternion.identity, transform);
+                var bullet = Instantiate(bulletPrefab, spawnPosition, Quaternion.identity, transform);
                 bullet.gameObject.SetActive(false);
                 bulletCache.Add(bullet);
             }
@@ -34,7 +34,7 @@ namespace bullet
 
         public void FireBullet(GameObject ignore, Vector2 startPosition, Vector2 direction)
         {
-            Bullet bullet = bulletCache[currentIndex];
+            var bullet = bulletCache[currentIndex];
             currentIndex = (currentIndex + 1) % cacheSize;
 
             bullet.PrimeBullet(ignore, startPosition, direction);

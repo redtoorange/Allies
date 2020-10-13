@@ -4,9 +4,9 @@ namespace orders
 {
     public class FollowOrder : Order
     {
+        public float haltDistance;
         public Player player;
         public float spd;
-        public float haltDistance;
 
         public FollowOrder(Player player, float spd, float haltDistance)
         {
