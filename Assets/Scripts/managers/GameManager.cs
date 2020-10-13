@@ -5,19 +5,26 @@ namespace managers
 {
     public class GameManager : MonoBehaviour
     {
+        private GameRoundManager gameRoundManager;
         private AllyManager allyManager;
         private BulletManager bulletManager;
         private InnocentManager innocentManager;
         private PlayerManager playerManager;
         private ZombieManager zombieManager;
 
-        private void Start()
+        private void Awake()
         {
+            gameRoundManager = GetComponentInChildren<GameRoundManager>();
             innocentManager = GetComponentInChildren<InnocentManager>();
             allyManager = GetComponentInChildren<AllyManager>();
             zombieManager = GetComponentInChildren<ZombieManager>();
             playerManager = GetComponentInChildren<PlayerManager>();
             bulletManager = GetComponentInChildren<BulletManager>();
+        }
+
+        public GameRoundManager GetGameRoundManager()
+        {
+            return gameRoundManager;
         }
 
         public InnocentManager GetInnocentManager()

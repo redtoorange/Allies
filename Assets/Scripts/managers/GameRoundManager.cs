@@ -54,5 +54,10 @@ namespace managers
             currentPhase = GameRoundPhase.Combat;
             OnPhaseChange?.Invoke(currentPhase);
         }
+
+        public void TriggerCombat()
+        {
+            RecruitmentEnded();
+        }
     }
 }

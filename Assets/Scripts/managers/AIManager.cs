@@ -14,7 +14,7 @@ namespace managers
             controllers = new List<T>(GetComponentsInChildren<T>());
             gameManager = GetComponentInParent<GameManager>();
 
-            grm = FindObjectOfType<GameRoundManager>();
+            grm = GetComponentInParent<GameManager>().GetGameRoundManager();
             grm.OnPhaseChange += HandlePhaseChange;
         }
 

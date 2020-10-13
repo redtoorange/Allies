@@ -1,4 +1,5 @@
 ﻿using bullet;
+using managers;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -10,6 +11,7 @@ namespace controller
         private float speed = 10.0f;
 
         private BulletManager bulletManager;
+        private PlayerManager playerManager;
         private Camera camera;
 
         private Rigidbody2D rigidbody2D;
@@ -19,6 +21,7 @@ namespace controller
             camera = Camera.main;
 
             bulletManager = FindObjectOfType<BulletManager>();
+            playerManager = GetComponentInParent<PlayerManager>();
             rigidbody2D = GetComponent<Rigidbody2D>();
         }
 
@@ -28,6 +31,7 @@ namespace controller
             {
                 Vector2 lookDirection = camera.ScreenToWorldPoint(Input.mousePosition) - transform.position;
                 bulletManager.FireBullet(gameObject, rigidbody2D.position, lookDirection.normalized);
+                playerManager.CheckToStartCombat();
             }
         }
 
