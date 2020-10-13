@@ -81,7 +81,8 @@ namespace controller
             {
                 if (currentState == InnocentState.Running && targetManager.TargetCount() != 0)
                 {
-                    Debug.Log("Cannot changes state with threats in range");
+                    // TODO Better handle this transition
+                    // Debug.Log("Cannot changes state with threats in range");
                 }
                 else
                 {
@@ -163,7 +164,7 @@ namespace controller
                     break;
                 }
                 default:
-                    Debug.Log("Unhandled order on [InnocentController]");
+                    Debug.Log("Unhandled order on [InnocentController]" + order.ToString());
                     break;
             }
         }

@@ -15,6 +15,6 @@ namespace scriptable
         
         [Header("Combat")]
         public float combatSpeed = 3.0f;
-        public float combatRange = 1.0f;
+        public float combatRange = 4.0f;
     }
 }

@@ -24,12 +24,12 @@ namespace managers.factories
 
         public static Order CreateChaseOrders(ZombieController controller, ZombieManagerConfig config)
         {
-            return new ChaseOrder(controller.GetTarget(), config.chaseSpeed);
+            return new ChaseOrder(controller.GetClosestTarget(), config.chaseSpeed);
         }
 
         public static Order CreateCombatOrders(ZombieController controller, ZombieManagerConfig config)
         {
-            var target = controller.GetTarget();
+            var target = controller.GetClosestTarget();
             if (target)
             {
                 return new ChaseOrder(target, config.combatSpeed);

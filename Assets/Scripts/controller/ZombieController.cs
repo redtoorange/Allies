@@ -96,6 +96,11 @@ namespace controller
         {
             return targetManager.GetTarget();
         }
+        
+        public GameCharacter GetClosestTarget()
+        {
+            return targetManager.GetClosestTarget(GetPosition());
+        }
 
         public void SetState(ZombieState state)
         {

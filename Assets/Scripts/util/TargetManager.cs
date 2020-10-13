@@ -63,6 +63,8 @@ namespace util
 
         public T GetTarget()
         {
+            SanitizeList();
+
             for (int i = 0; i < targets.Count; i++)
             {
                 if (targets[i] != null)
@@ -72,6 +74,28 @@ namespace util
             }
 
             return null;
+        }
+
+        public T GetClosestTarget(Vector2 position)
+        {
+            SanitizeList();
+
+            T target = null;
+            float distance = float.MaxValue;
+
+            for (int i = 0; i < targets.Count; i++)
+            {
+                if (targets[i] != null)
+                {
+                    float dist = Vector2.Distance(position, targets[i].GetPosition());
+                    if (dist < distance)
+                    {
+                        target = targets[i];
+                    }
+                }
+            }
+
+            return target;
         }
     }
 }

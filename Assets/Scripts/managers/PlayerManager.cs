@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace managers
@@ -7,7 +6,7 @@ namespace managers
     {
         private GameRoundManager gameRoundManager;
         private bool combatStarted = false;
-        
+
         private void Start()
         {
             gameRoundManager = GetComponentInParent<GameManager>().GetGameRoundManager();
@@ -18,7 +17,7 @@ namespace managers
             if (!combatStarted)
             {
                 gameRoundManager.TriggerCombat();
-            }    
+            }
         }
     }
 }

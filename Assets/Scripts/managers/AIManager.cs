@@ -7,15 +7,15 @@ namespace managers
     {
         protected List<T> controllers;
         protected GameManager gameManager;
-        protected GameRoundManager grm;
+        protected GameRoundManager gameRoundManager;
 
         protected void Start()
         {
             controllers = new List<T>(GetComponentsInChildren<T>());
             gameManager = GetComponentInParent<GameManager>();
 
-            grm = GetComponentInParent<GameManager>().GetGameRoundManager();
-            grm.OnPhaseChange += HandlePhaseChange;
+            gameRoundManager = GetComponentInParent<GameManager>().GetGameRoundManager();
+            gameRoundManager.OnPhaseChange += HandlePhaseChange;
         }
 
         protected void AddController(T controller)
