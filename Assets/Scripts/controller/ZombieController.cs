@@ -11,6 +11,8 @@ namespace controller
 {
     public class ZombieController : AIController
     {
+        public static readonly string TAG = "[ZombieController]";
+
         [SerializeField]
         private ZombieManagerConfig config;
 
@@ -55,15 +57,21 @@ namespace controller
 
         private void FixedUpdate()
         {
+            CalculateState();
+
             if (NeedsOrder())
             {
                 CreateZombieOrders();
             }
-            else
-            {
-                if (currentOrder == null && orders.Count > 0) currentOrder = orders.Dequeue();
 
-                if (currentOrder != null) HandleOrder(currentOrder);
+            if (currentOrder == null && orders.Count > 0)
+            {
+                currentOrder = orders.Dequeue();
+            }
+
+            if (currentOrder != null)
+            {
+                HandleOrder(currentOrder);
             }
         }
 
@@ -96,7 +104,7 @@ namespace controller
         {
             return targetManager.GetTarget();
         }
-        
+
         public GameCharacter GetClosestTarget()
         {
             return targetManager.GetClosestTarget(GetPosition());
@@ -109,18 +117,27 @@ namespace controller
                 currentState = state;
                 controlledZombie.SetMode(currentState);
                 DumpOrders();
+
+                if (state == ZombieState.Combat)
+                {
+                    SetSearchRange(config.combatSearchRange);
+                }
             }
         }
 
-        public void CalculateState()
+        private void CalculateState()
         {
-            if (targetManager.TargetCount() > 0)
+            if (GetClosestTarget() != null)
+            {
                 SetState(ZombieState.Chase);
+            }
             else
+            {
                 SetState(zombieManager.GetGlobalState());
+            }
         }
 
-        public void SetSearchRange(float range)
+        private void SetSearchRange(float range)
         {
             activatedZone.SetRange(range);
         }
@@ -149,38 +166,32 @@ namespace controller
 
         protected override void HandleOrder(Order order)
         {
+            bool completed = false;
             switch (order)
             {
                 case MoveOrder mo:
-                {
-                    if (Move(mo)) currentOrder = null;
-
+                    completed = Move(mo);
                     break;
-                }
                 case WaitOrder wo:
-                {
-                    if (Wait(ref wo)) currentOrder = null;
-
+                    completed = Wait(ref wo);
                     break;
-                }
                 case ChaseOrder co:
-                {
-                    if (Chase(co)) currentOrder = null;
-
+                    completed = Chase(co);
                     break;
-                }
+                default:
+                    Debug.Log(TAG + "Unhandled order " + order);
+                    break;
+            }
+
+            if (completed)
+            {
+                currentOrder = null;
             }
         }
 
 
         private void CreateZombieOrders()
         {
-            if (zombieManager.GetGlobalState() == ZombieState.Combat && GetState() != ZombieState.Combat)
-            {
-                SetState(ZombieState.Combat);
-                SetSearchRange(config.combatSearchRange);
-            }
-
             if (NeedsOrder())
                 switch (GetState())
                 {

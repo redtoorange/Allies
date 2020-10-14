@@ -5,9 +5,9 @@ namespace managers
 {
     public class GameManager : MonoBehaviour
     {
-        private GameRoundManager gameRoundManager;
         private AllyManager allyManager;
         private BulletManager bulletManager;
+        private GameRoundManager gameRoundManager;
         private InnocentManager innocentManager;
         private PlayerManager playerManager;
         private ZombieManager zombieManager;

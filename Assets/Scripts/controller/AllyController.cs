@@ -12,23 +12,23 @@ namespace controller
 {
     public class AllyController : AIController
     {
-        public static string TAG = "[AllyController]";
-        
+        public static readonly string TAG = "[AllyController]";
+
         [SerializeField]
         private AllyManagerConfig config;
+
         [SerializeField]
         private AllyState currentState = AllyState.Follow;
 
-        // Events
-        public event Action<AllyController> OnDeath;
-
-        private AllyManager manager = null;
-        private Ally controlledAlly = null;
-        private Player followedPlayer = null;
-        
         [SerializeField]
         private TargetManager<Zombie> targetManager = new TargetManager<Zombie>();
-        private ActivatedZone firingZone = null;
+
+        private Ally controlledAlly;
+
+        private ActivatedZone firingZone;
+        private Player followedPlayer;
+
+        private AllyManager manager;
 
         private void Start()
         {
@@ -45,54 +45,37 @@ namespace controller
 
         private void FixedUpdate()
         {
+            CalculateState();
+
             if (NeedsOrder())
             {
                 CreateAllyOrders();
             }
+
+            if (currentOrder == null && orders.Count > 0)
+            {
+                currentOrder = orders.Dequeue();
+            }
+
+            if (currentOrder != null)
+            {
+                HandleOrder(currentOrder);
+            }
+        }
+
+        // Events
+        public event Action<AllyController> OnDeath;
+
+        private void CalculateState()
+        {
+            if (GetClosestTarget() != null && manager.GetGlobalState() == AllyState.Combat)
+            {
+                SetState(AllyState.Combat);
+            }
             else
             {
-                if (currentOrder == null && orders.Count > 0)
-                    currentOrder = orders.Dequeue();
-
-                if (currentOrder != null)
-                    HandleOrder(currentOrder);
+                SetState(AllyState.Follow);
             }
-        }
-
-
-        protected override void HandleOrder(Order order)
-        {
-            switch (order)
-            {
-                case FollowOrder fo:
-                {
-                    if (Follow(fo))
-                    {
-                        Debug.Log(TAG + "Completed Follow Order");
-                        currentOrder = null;
-                    }
-                    break;
-                }
-                case FireOrder fire:
-                {
-                    if (HandleFireOrder(fire))
-                    {
-                        Debug.Log(TAG + "Completed Fire Order");
-                        currentOrder = null;
-                    }
-                    break;
-                }
-                default:
-                    Debug.Log(TAG + "Unhandled order");
-                    break;
-            }
-            
-        }
-
-        private bool HandleFireOrder(FireOrder fires)
-        {
-            manager.FireBullet(this, fires.target.GetPosition());
-            return true;
         }
 
         public void SetState(AllyState state)
@@ -103,6 +86,38 @@ namespace controller
                 currentState = state;
             }
         }
+
+        protected override void HandleOrder(Order order)
+        {
+            bool completed = false;
+            switch (order)
+            {
+                case WaitOrder wo:
+                    completed = Wait(ref wo);
+                    break;
+                case FollowOrder fo:
+                    completed = Follow(fo);
+                    break;
+                case FireOrder fire:
+                    completed = HandleFireOrder(fire);
+                    break;
+                default:
+                    Debug.Log(TAG + "Unhandled order " + order);
+                    break;
+            }
+
+            if (completed)
+            {
+                currentOrder = null;
+            }
+        }
+
+        private bool HandleFireOrder(FireOrder fires)
+        {
+            manager.FireBullet(this, fires.target.GetPosition());
+            return true;
+        }
+
 
         public AllyState GetCurrentState()
         {
@@ -121,11 +136,6 @@ namespace controller
 
         private void CreateAllyOrders()
         {
-            if (manager.GetGlobalState() == AllyState.Combat && GetCurrentState() != AllyState.Combat)
-            {
-                SetState(AllyState.Combat);
-            }
-
             switch (GetCurrentState())
             {
                 case AllyState.Neutral:
@@ -137,7 +147,7 @@ namespace controller
                     Debug.Log(TAG + "Adding Follow Order");
                     break;
                 case AllyState.Combat:
-                    orders.Enqueue(AllyOrderFactory.CreateCombatOrders(this, config));
+                    orders.Enqueue(AllyOrderFactory.CreateFireOrder(this, config));
                     Debug.Log(TAG + "Adding Combat Order");
                     break;
             }

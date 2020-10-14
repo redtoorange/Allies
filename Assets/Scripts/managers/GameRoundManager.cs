@@ -23,8 +23,6 @@ namespace managers
         [SerializeField]
         private GameRoundPhase currentPhase = GameRoundPhase.Recruitment;
 
-        public event Action<GameRoundPhase> OnPhaseChange;
-
         private void Start()
         {
             if (recruitmentCountdown)
@@ -43,6 +41,8 @@ namespace managers
                 recruitmentCountdown.OnTimeOut.RemoveListener(RecruitmentEnded);
             }
         }
+
+        public event Action<GameRoundPhase> OnPhaseChange;
 
         private void RecruitmentEnded()
         {

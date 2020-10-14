@@ -10,16 +10,16 @@ namespace ui
         [SerializeField] private TextMeshProUGUI textLabel;
         [SerializeField] private int cacheCount = 240;
 
-        private float timeOut;
-        private float remainingTime;
-        private int currentDisplayNumber;
-
-        private bool triggered = false;
-        private bool started = false;
-
         public UnityEvent OnTimeOut;
+        private int currentDisplayNumber;
+        private float remainingTime;
+        private bool started;
 
         private Dictionary<int, string> stringCache;
+
+        private float timeOut;
+
+        private bool triggered;
 
         private void Awake()
         {
@@ -27,13 +27,13 @@ namespace ui
             Reset();
         }
 
-        private void BuildStringCache()
+        public void Reset()
         {
-            stringCache = new Dictionary<int, string>(cacheCount + 1);
-            for (int i = 0; i <= cacheCount; i++)
-            {
-                stringCache.Add(i, i + " s");
-            }
+            started = false;
+            triggered = false;
+            remainingTime = timeOut;
+            currentDisplayNumber = Mathf.FloorToInt(remainingTime);
+            textLabel.SetText(stringCache[currentDisplayNumber]);
         }
 
         private void Update()
@@ -53,6 +53,15 @@ namespace ui
             }
         }
 
+        private void BuildStringCache()
+        {
+            stringCache = new Dictionary<int, string>(cacheCount + 1);
+            for (int i = 0; i <= cacheCount; i++)
+            {
+                stringCache.Add(i, i + " s");
+            }
+        }
+
         private void UpdateText()
         {
             if (remainingTime < currentDisplayNumber)
@@ -66,15 +75,6 @@ namespace ui
         {
             Reset();
             started = true;
-        }
-
-        public void Reset()
-        {
-            started = false;
-            triggered = false;
-            remainingTime = timeOut;
-            currentDisplayNumber = Mathf.FloorToInt(remainingTime);
-            textLabel.SetText(stringCache[currentDisplayNumber]);
         }
 
         public void SetTime(float time)

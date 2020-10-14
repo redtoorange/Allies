@@ -1,4 +1,5 @@
-﻿using controller;
+﻿using character;
+using controller;
 using orders;
 using scriptable;
 using UnityEngine;
@@ -24,12 +25,18 @@ namespace managers.factories
 
         public static Order CreateChaseOrders(ZombieController controller, ZombieManagerConfig config)
         {
-            return new ChaseOrder(controller.GetClosestTarget(), config.chaseSpeed);
+            GameCharacter target = controller.GetClosestTarget();
+            if (target)
+            {
+                return new ChaseOrder(controller.GetClosestTarget(), config.chaseSpeed);
+            }
+
+            return new WaitOrder(0);
         }
 
         public static Order CreateCombatOrders(ZombieController controller, ZombieManagerConfig config)
         {
-            var target = controller.GetClosestTarget();
+            GameCharacter target = controller.GetClosestTarget();
             if (target)
             {
                 return new ChaseOrder(target, config.combatSpeed);

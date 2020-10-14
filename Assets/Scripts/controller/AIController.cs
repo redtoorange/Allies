@@ -6,13 +6,13 @@ namespace controller
 {
     public abstract class AIController : MonoBehaviour
     {
-        protected Order currentOrder;
         private readonly float movementThreshold = 0.1f;
+        private readonly float stallThreshold = 0.001f;
+        protected Order currentOrder;
 
         protected Queue<Order> orders = new Queue<Order>();
         private Vector2 positionLastFrame = new Vector2(float.MinValue, float.MinValue);
         protected Rigidbody2D rigidbody2D;
-        private readonly float stallThreshold = 0.001f;
 
 
         protected void Start()

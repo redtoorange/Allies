@@ -12,9 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6ff0f237f2540d39baef34e1ea2a647, type: 3}
   m_Name: AllyConfig
   m_EditorClassIdentifier: 
-  neutralSpeed: 1
-  neutralRange: 2
-  followSpeed: 3.5
+  followSpeed: 5
   haltDistance: 3.5
-  combatSpeed: 3
-  combatRange: 1
+  combatRange: 5

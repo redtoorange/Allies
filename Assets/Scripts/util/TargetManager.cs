@@ -12,7 +12,7 @@ namespace util
         private List<T> targets = new List<T>();
 
         [SerializeField]
-        private bool dirty = false;
+        private bool dirty;
 
         public void AddTarget(T target)
         {

@@ -7,12 +7,14 @@ namespace controller
 {
     public class PlayerController : MonoBehaviour
     {
+        public static readonly string TAG = "[PlayerController]";
+
         [SerializeField]
         private float speed = 10.0f;
 
         private BulletManager bulletManager;
-        private PlayerManager playerManager;
         private Camera camera;
+        private PlayerManager playerManager;
 
         private Rigidbody2D rigidbody2D;
 

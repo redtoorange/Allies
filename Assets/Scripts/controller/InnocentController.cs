@@ -12,6 +12,8 @@ namespace controller
 {
     public class InnocentController : AIController
     {
+        public static readonly string TAG = "[InnocentController]";
+
         [SerializeField]
         private InnocentManagerConfig config;
 
@@ -40,21 +42,21 @@ namespace controller
 
         private void FixedUpdate()
         {
+            CalculateState();
+
             if (NeedsOrder())
             {
                 CreateInnocentOrders();
             }
-            else
-            {
-                if (currentOrder == null && orders.Count > 0)
-                {
-                    currentOrder = orders.Dequeue();
-                }
 
-                if (currentOrder != null)
-                {
-                    HandleOrder(currentOrder);
-                }
+            if (currentOrder == null && orders.Count > 0)
+            {
+                currentOrder = orders.Dequeue();
+            }
+
+            if (currentOrder != null)
+            {
+                HandleOrder(currentOrder);
             }
         }
 
@@ -69,6 +71,14 @@ namespace controller
         // }
 
         public InnocentState GetState() => currentState;
+
+        private void CalculateState()
+        {
+            if (manager.GetGlobalState() == InnocentState.Combat && GetState() != InnocentState.Combat)
+            {
+                SetState(InnocentState.Combat);
+            }
+        }
 
         public void SetState(InnocentState newState)
         {
@@ -134,48 +144,31 @@ namespace controller
 
         protected override void HandleOrder(Order order)
         {
+            bool completed = false;
             switch (order)
             {
                 case MoveOrder mo:
-                {
-                    if (Move(mo))
-                    {
-                        currentOrder = null;
-                    }
-
+                    completed = Move(mo);
                     break;
-                }
                 case RunOrder ro:
-                {
-                    if (Run(ro))
-                    {
-                        currentOrder = null;
-                    }
-
+                    completed = Run(ro);
                     break;
-                }
                 case WaitOrder wo:
-                {
-                    if (Wait(ref wo))
-                    {
-                        currentOrder = null;
-                    }
-
+                    completed = Wait(ref wo);
                     break;
-                }
                 default:
-                    Debug.Log("Unhandled order on [InnocentController]" + order.ToString());
+                    Debug.Log(TAG + "Unhandled order " + order);
                     break;
+            }
+
+            if (completed)
+            {
+                currentOrder = null;
             }
         }
 
         private void CreateInnocentOrders()
         {
-            if (manager.GetGlobalState() == InnocentState.Combat && GetState() != InnocentState.Combat)
-            {
-                SetState(InnocentState.Combat);
-            }
-
             switch (GetState())
             {
                 case InnocentState.Neutral:

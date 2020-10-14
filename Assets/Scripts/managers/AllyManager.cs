@@ -1,7 +1,6 @@
 ﻿using bullet;
 using character;
 using controller;
-using scriptable;
 using UnityEngine;
 
 namespace managers
@@ -11,10 +10,10 @@ namespace managers
         [SerializeField]
         private GameObject allyPrefab;
 
+        private BulletManager bulletManager;
+
         private AllyState currentGlobalState = AllyState.Follow;
         private GameRoundPhase currentPhase = GameRoundPhase.Recruitment;
-
-        private BulletManager bulletManager = null;
 
 
         private void Start()
@@ -22,7 +21,7 @@ namespace managers
             base.Start();
 
             bulletManager = gameManager.GetBulletManager();
-            
+
             foreach (var allyController in controllers)
             {
                 // Bind the callbacks
