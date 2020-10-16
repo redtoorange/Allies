@@ -3,7 +3,7 @@
 namespace scriptable
 {
     [CreateAssetMenu(fileName = "InnocentManagerConfig", menuName = "Config/InnocentManager", order = 0)]
-    public class InnocentManagerConfig : ScriptableObject
+    public class InnocentConfig : ScriptableObject
     {
         [Header("Wander")]
         public float wanderSpeed = 1.0f;

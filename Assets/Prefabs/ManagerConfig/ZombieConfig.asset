@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shambleSpeed: 1
   shambleRange: 2
+  shambleSearchRange: 3
   shambleWait: {x: 0.5, y: 3}
-  chaseSpeed: 2.5
+  chaseSpeed: 5
   chaseWait: {x: 0.25, y: 0.5}
   combatSpeed: 5
+  combatSearchRange: 10

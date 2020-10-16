@@ -15,7 +15,7 @@ namespace controller
         public static readonly string TAG = "[AllyController]";
 
         [SerializeField]
-        private AllyManagerConfig config;
+        private AllyConfig config;
 
         [SerializeField]
         private AllyState currentState = AllyState.Follow;
@@ -30,6 +30,9 @@ namespace controller
 
         private AllyManager manager;
 
+        private bool canShoot = true;
+        private float shotCooldown = 0.0f;
+
         private void Start()
         {
             base.Start();
@@ -43,8 +46,18 @@ namespace controller
             firingZone.OnTriggerExited += OnExitedFireZone;
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
+            if (shotCooldown > 0)
+            {
+                shotCooldown -= Time.deltaTime;
+                if (shotCooldown <= 0)
+                {
+                    shotCooldown = 0;
+                    canShoot = true;
+                }
+            }
+            
             CalculateState();
 
             if (NeedsOrder())
@@ -56,7 +69,10 @@ namespace controller
             {
                 currentOrder = orders.Dequeue();
             }
+        }
 
+        private void FixedUpdate()
+        {
             if (currentOrder != null)
             {
                 HandleOrder(currentOrder);
@@ -68,7 +84,7 @@ namespace controller
 
         private void CalculateState()
         {
-            if (GetClosestTarget() != null && manager.GetGlobalState() == AllyState.Combat)
+            if (canShoot && GetClosestTarget() != null && manager.GetGlobalState() == AllyState.Combat)
             {
                 SetState(AllyState.Combat);
             }
@@ -115,6 +131,10 @@ namespace controller
         private bool HandleFireOrder(FireOrder fires)
         {
             manager.FireBullet(this, fires.target.GetPosition());
+            
+            canShoot = false;
+            shotCooldown = config.shotCooldown;
+            
             return true;
         }
 

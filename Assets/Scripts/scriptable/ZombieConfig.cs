@@ -3,7 +3,7 @@
 namespace scriptable
 {
     [CreateAssetMenu(fileName = "ZombieManagerConfig", menuName = "Config/ZombieManager", order = 0)]
-    public class ZombieManagerConfig : ScriptableObject
+    public class ZombieConfig : ScriptableObject
     {
         [Header("Shamble")]
         public float shambleSpeed = 1.0f;

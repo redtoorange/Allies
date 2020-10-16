@@ -3,7 +3,7 @@
 namespace scriptable
 {
     [CreateAssetMenu(fileName = "AllyManagerConfig", menuName = "Config/AllyManager", order = 0)]
-    public class AllyManagerConfig : ScriptableObject
+    public class AllyConfig : ScriptableObject
     {
         [Header("Follow")]
         public float followSpeed = 5f;
@@ -11,5 +11,6 @@ namespace scriptable
 
         [Header("Combat")]
         public float combatRange = 5.0f;
+        public float shotCooldown = 1.0f;
     }
 }

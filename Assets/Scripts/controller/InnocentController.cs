@@ -15,7 +15,7 @@ namespace controller
         public static readonly string TAG = "[InnocentController]";
 
         [SerializeField]
-        private InnocentManagerConfig config;
+        private InnocentConfig config;
 
         [SerializeField]
         private TargetManager<Zombie> targetManager = new TargetManager<Zombie>();

@@ -7,7 +7,7 @@ namespace managers.factories
 {
     public abstract class InnocentOrderFactory
     {
-        public static Order CreateWanderOrder(InnocentController controller, InnocentManagerConfig config)
+        public static Order CreateWanderOrder(InnocentController controller, InnocentConfig config)
         {
             var destination = new Vector2(
                 Random.Range(-config.wanderRange, config.wanderRange),
@@ -17,17 +17,17 @@ namespace managers.factories
             return new MoveOrder(controller.GetPosition() + destination, config.wanderSpeed);
         }
 
-        public static Order CreateWaitOrder(InnocentController controller, InnocentManagerConfig config)
+        public static Order CreateWaitOrder(InnocentController controller, InnocentConfig config)
         {
             return new WaitOrder(Random.Range(config.wanderWait.x, config.wanderWait.y));
         }
 
-        public static Order CreateRunOrders(InnocentController controller, InnocentManagerConfig config)
+        public static Order CreateRunOrders(InnocentController controller, InnocentConfig config)
         {
             return new RunOrder(controller.GetThreat(), config.runSpeed);
         }
 
-        public static Order CreateCombatOrders(InnocentController controller, InnocentManagerConfig config)
+        public static Order CreateCombatOrders(InnocentController controller, InnocentConfig config)
         {
             var destination = new Vector2(
                 Random.Range(-config.combatRange, config.combatRange),

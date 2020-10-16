@@ -9,19 +9,19 @@ namespace managers.factories
     public abstract class AllyOrderFactory
     {
         // What are neutral orders?  Should this be a small wander? Stay away from zombies?
-        public static Order CreateNeutralOrders(AllyController allyController, AllyManagerConfig config)
+        public static Order CreateNeutralOrders(AllyController allyController, AllyConfig config)
         {
             return new FollowOrder(allyController.GetPlayer(), config.followSpeed, config.haltDistance);
         }
 
         // Follow the player but stay outside of a certain range
-        public static Order CreateFollowOrders(AllyController allyController, AllyManagerConfig config)
+        public static Order CreateFollowOrders(AllyController allyController, AllyConfig config)
         {
             return new FollowOrder(allyController.GetPlayer(), config.followSpeed, config.haltDistance);
         }
 
 
-        public static Order CreateFireOrder(AllyController allyController, AllyManagerConfig config)
+        public static Order CreateFireOrder(AllyController allyController, AllyConfig config)
         {
             Zombie threat = allyController.GetClosestTarget();
             if (threat != null)

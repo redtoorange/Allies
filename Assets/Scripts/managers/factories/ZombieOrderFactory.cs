@@ -8,7 +8,7 @@ namespace managers.factories
 {
     public abstract class ZombieOrderFactory
     {
-        public static Order CreateShambleOrder(ZombieController controller, ZombieManagerConfig config)
+        public static Order CreateShambleOrder(ZombieController controller, ZombieConfig config)
         {
             var destination = new Vector2(
                 Random.Range(-config.shambleRange, config.shambleRange),
@@ -18,12 +18,12 @@ namespace managers.factories
             return new MoveOrder(controller.GetPosition() + destination, config.shambleSpeed);
         }
 
-        public static Order CreateWaitOrder(ZombieController controller, ZombieManagerConfig config)
+        public static Order CreateWaitOrder(ZombieController controller, ZombieConfig config)
         {
             return new WaitOrder(Random.Range(config.shambleWait.x, config.shambleWait.y));
         }
 
-        public static Order CreateChaseOrders(ZombieController controller, ZombieManagerConfig config)
+        public static Order CreateChaseOrders(ZombieController controller, ZombieConfig config)
         {
             GameCharacter target = controller.GetClosestTarget();
             if (target)
@@ -34,7 +34,7 @@ namespace managers.factories
             return new WaitOrder(0);
         }
 
-        public static Order CreateCombatOrders(ZombieController controller, ZombieManagerConfig config)
+        public static Order CreateCombatOrders(ZombieController controller, ZombieConfig config)
         {
             GameCharacter target = controller.GetClosestTarget();
             if (target)

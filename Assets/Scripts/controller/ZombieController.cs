@@ -14,7 +14,7 @@ namespace controller
         public static readonly string TAG = "[ZombieController]";
 
         [SerializeField]
-        private ZombieManagerConfig config;
+        private ZombieConfig config;
 
         [SerializeField]
         private TargetManager<GameCharacter> targetManager = new TargetManager<GameCharacter>();
