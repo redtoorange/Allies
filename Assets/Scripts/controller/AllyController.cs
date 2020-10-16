@@ -13,6 +13,8 @@ namespace controller
     public class AllyController : AIController
     {
         public static readonly string TAG = "[AllyController]";
+        
+        public event Action<AllyController> OnConverted;
 
         [SerializeField]
         private AllyConfig config;
@@ -160,15 +162,12 @@ namespace controller
             {
                 case AllyState.Neutral:
                     orders.Enqueue(AllyOrderFactory.CreateNeutralOrders(this, config));
-                    Debug.Log(TAG + "Adding Neutral Order");
                     break;
                 case AllyState.Follow:
                     orders.Enqueue(AllyOrderFactory.CreateFollowOrders(this, config));
-                    Debug.Log(TAG + "Adding Follow Order");
                     break;
                 case AllyState.Combat:
                     orders.Enqueue(AllyOrderFactory.CreateFireOrder(this, config));
-                    Debug.Log(TAG + "Adding Combat Order");
                     break;
             }
         }
@@ -192,6 +191,14 @@ namespace controller
 
                 targetManager.RemoveTarget(z);
             }
+        }
+
+        public void ConvertToZombie()
+        {
+            gameObject.SetActive(false);
+            OnConverted?.Invoke(this);
+            controlledAlly.DestroyingCharacter();
+            Destroy(gameObject);
         }
     }
 }

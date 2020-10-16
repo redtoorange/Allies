@@ -22,10 +22,9 @@ namespace managers
 
             bulletManager = gameManager.GetBulletManager();
 
-            foreach (var allyController in controllers)
+            for (int i = 0; i < controllers.Count; i++)
             {
-                // Bind the callbacks
-                allyController.OnDeath += RemoveController;
+                controllers[i].OnConverted += OnAllyConverted;
             }
         }
 
@@ -35,22 +34,22 @@ namespace managers
             {
                 currentPhase = GameRoundPhase.Combat;
                 currentGlobalState = AllyState.Combat;
-                foreach (var ally in controllers)
+
+                for (int i = 0; i < controllers.Count; i++)
                 {
-                    ally.SetState(AllyState.Combat);
+                    controllers[i].SetState(AllyState.Combat);
                 }
             }
         }
 
         public void SpawnAlly(Vector2 position)
         {
-            var go = Instantiate(allyPrefab, position, Quaternion.identity, transform);
-            var allyController = go.GetComponent<AllyController>();
+            GameObject go = Instantiate(allyPrefab, position, Quaternion.identity, transform);
+            AllyController allyController = go.GetComponent<AllyController>();
 
             AddController(go.GetComponent<AllyController>());
 
-            // Bind the callbacks
-            allyController.OnDeath += RemoveController;
+            allyController.OnConverted += OnAllyConverted;
         }
 
         public AllyState GetGlobalState()
@@ -62,6 +61,12 @@ namespace managers
         {
             Vector2 dir = targetPosition - controller.GetPosition();
             bulletManager.FireBullet(gameObject, controller.GetPosition(), dir.normalized);
+        }
+
+        private void OnAllyConverted(AllyController allyController)
+        {
+            RemoveController(allyController);
+            gameManager.GetZombieManager().SpawnZombie(allyController.GetPosition());
         }
     }
 }

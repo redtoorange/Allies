@@ -12,6 +12,8 @@ namespace controller
 {
     public class InnocentController : AIController
     {
+        public event Action<InnocentController, InnocentConvertedTo> OnConverted;
+
         public static readonly string TAG = "[InnocentController]";
 
         [SerializeField]
@@ -60,7 +62,6 @@ namespace controller
             }
         }
 
-        public event Action<InnocentController, InnocentConvertedTo> OnConverted;
 
         public Zombie GetThreat() => targetManager.GetTarget();
 

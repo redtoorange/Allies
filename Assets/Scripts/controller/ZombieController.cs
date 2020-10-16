@@ -84,14 +84,25 @@ namespace controller
 
         private void OnCollisionEnter2D(Collision2D other)
         {
-            var playerController = other.gameObject.GetComponent<PlayerController>();
+            PlayerController playerController = other.gameObject.GetComponent<PlayerController>();
             if (playerController)
             {
                 // Do damage to player
+                return;
             }
 
-            var innocentController = other.gameObject.GetComponent<InnocentController>();
-            if (innocentController) innocentController.ConvertToZombie();
+            InnocentController innocentController = other.gameObject.GetComponent<InnocentController>();
+            if (innocentController)
+            {
+                innocentController.ConvertToZombie();
+                return;
+            }
+            
+            AllyController allyController = other.gameObject.GetComponent<AllyController>();
+            if (allyController)
+            {
+                allyController.ConvertToZombie();
+            }
         }
 
         // Getters
@@ -158,7 +169,10 @@ namespace controller
 
         private void RemoveTarget(GameCharacter gc)
         {
-            if (currentOrder is ChaseOrder co && (co.target == gc || co.target == null)) DumpOrders();
+            if (currentOrder is ChaseOrder co && (co.target == gc || co.target == null))
+            {
+                DumpOrders();
+            }
 
             targetManager.RemoveTarget(gc);
             gc.OnCharacterDestroyed -= RemoveTarget;

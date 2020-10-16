@@ -87,7 +87,7 @@ namespace util
             {
                 if (targets[i] != null)
                 {
-                    float dist = Vector2.Distance(position, targets[i].GetPosition());
+                    float dist = Mathf.Abs(Vector2.Distance(position, targets[i].GetPosition()));
                     if (dist < distance)
                     {
                         target = targets[i];

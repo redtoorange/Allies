@@ -20,7 +20,10 @@ namespace managers
         {
             base.Start();
 
-            foreach (var innocent in controllers) innocent.OnConverted += OnInnocentConverted;
+            for (int i = 0; i < controllers.Count; i++)
+            {
+                controllers[i].OnConverted += OnInnocentConverted;
+            }
         }
 
         protected override void HandlePhaseChange(GameRoundPhase phase)
@@ -30,7 +33,10 @@ namespace managers
                 currentPhase = GameRoundPhase.Combat;
                 globalInnocentState = InnocentState.Combat;
 
-                foreach (var innocent in controllers) innocent.SetState(InnocentState.Combat);
+                for (int i = 0; i < controllers.Count; i++)
+                {
+                    controllers[i].SetState(InnocentState.Combat);
+                }
             }
         }
 
@@ -38,9 +44,13 @@ namespace managers
         {
             RemoveController(innocent);
             if (to == InnocentConvertedTo.Ally)
+            {
                 gameManager.GetAllyManager().SpawnAlly(innocent.GetPosition());
+            }
             else if (to == InnocentConvertedTo.Zombie)
+            {
                 gameManager.GetZombieManager().SpawnZombie(innocent.GetPosition());
+            }
         }
 
 
