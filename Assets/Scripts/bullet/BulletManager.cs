@@ -22,11 +22,11 @@ namespace bullet
         private void CreateBulletCache()
         {
             bulletCache = new List<Bullet>(cacheSize);
-            var spawnPosition = new Vector2(-1000, -1000);
+            Vector2 spawnPosition = new Vector2(-1000, -1000);
 
-            for (var i = 0; i < cacheSize; i++)
+            for (int i = 0; i < cacheSize; i++)
             {
-                var bullet = Instantiate(bulletPrefab, spawnPosition, Quaternion.identity, transform);
+                Bullet bullet = Instantiate(bulletPrefab, spawnPosition, Quaternion.identity, transform);
                 bullet.gameObject.SetActive(false);
                 bulletCache.Add(bullet);
             }
@@ -34,7 +34,7 @@ namespace bullet
 
         public void FireBullet(GameObject ignore, Vector2 startPosition, Vector2 direction)
         {
-            var bullet = bulletCache[currentIndex];
+            Bullet bullet = bulletCache[currentIndex];
             currentIndex = (currentIndex + 1) % cacheSize;
 
             bullet.PrimeBullet(ignore, startPosition, direction);

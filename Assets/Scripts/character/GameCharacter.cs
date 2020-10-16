@@ -40,7 +40,7 @@ namespace character
             if (rb2d != null) return rb2d.position;
 
             Debug.LogError("RigidBody2D has been destroyed on " + gameObject.name);
-            return Vector2.zero;
+            return Vector2.negativeInfinity;
         }
 
         public void DestroyingCharacter()

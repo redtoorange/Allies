@@ -23,7 +23,10 @@ namespace managers
             if (phase == GameRoundPhase.Combat)
             {
                 globalZombieState = ZombieState.Combat;
-                foreach (var zombieController in controllers) zombieController.SetState(ZombieState.Combat);
+                for (int i = 0; i < controllers.Count; i++)
+                {
+                    controllers[i].SetState(ZombieState.Combat);
+                }
             }
         }
 
@@ -32,8 +35,8 @@ namespace managers
         {
             if (controllers.Count >= 50) return;
 
-            var go = Instantiate(zombiePrefab, position, Quaternion.identity, transform);
-            var controller = go.GetComponent<ZombieController>();
+            GameObject go = Instantiate(zombiePrefab, position, Quaternion.identity, transform);
+            ZombieController controller = go.GetComponent<ZombieController>();
 
             AddController(controller);
         }

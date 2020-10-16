@@ -10,7 +10,7 @@ namespace managers.factories
     {
         public static Order CreateShambleOrder(ZombieController controller, ZombieConfig config)
         {
-            var destination = new Vector2(
+            Vector2 destination = new Vector2(
                 Random.Range(-config.shambleRange, config.shambleRange),
                 Random.Range(-config.shambleRange, config.shambleRange)
             );
@@ -42,7 +42,7 @@ namespace managers.factories
                 return new ChaseOrder(target, config.combatSpeed);
             }
 
-            var destination = new Vector2(
+            Vector2 destination = new Vector2(
                 Random.Range(-config.shambleRange, config.shambleRange),
                 Random.Range(-config.shambleRange, config.shambleRange)
             );

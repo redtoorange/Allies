@@ -38,7 +38,7 @@ namespace bullet
         {
             if (other.gameObject != ignore)
             {
-                var d = other.GetComponent<IDamageable>();
+                IDamageable d = other.GetComponent<IDamageable>();
                 if (d != null)
                 {
                     d.TakeDamage(damageAmount);

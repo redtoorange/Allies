@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using orders;
 using UnityEngine;
 
@@ -35,8 +34,9 @@ namespace controller
         {
             if (rigidbody2D == null)
             {
-                Debug.Log("Error");
+                return Vector2.negativeInfinity;
             }
+
             return rigidbody2D.position;
         }
 
@@ -60,8 +60,8 @@ namespace controller
 
         protected bool Move(MoveOrder mo)
         {
-            var position = rigidbody2D.position;
-            var dir = mo.pos - position;
+            Vector2 position = rigidbody2D.position;
+            Vector2 dir = mo.pos - position;
             rigidbody2D.MovePosition(position + dir.normalized * (mo.spd * Time.fixedDeltaTime));
 
             // Detect Stalled Movement
@@ -80,8 +80,8 @@ namespace controller
         {
             if (co.target == null || co.target.gameObject == null) return true;
 
-            var position = rigidbody2D.position;
-            var dir = co.target.GetPosition() - position;
+            Vector2 position = rigidbody2D.position;
+            Vector2 dir = co.target.GetPosition() - position;
             rigidbody2D.MovePosition(position + dir.normalized * (co.spd * Time.fixedDeltaTime));
 
             // Detect Stalled Movement
@@ -108,8 +108,8 @@ namespace controller
         {
             if (ro.target == null || ro.target.gameObject == null) return true;
 
-            var position = rigidbody2D.position;
-            var dir = position - ro.target.GetPosition();
+            Vector2 position = rigidbody2D.position;
+            Vector2 dir = position - ro.target.GetPosition();
             rigidbody2D.MovePosition(position + dir.normalized * (ro.spd * Time.fixedDeltaTime));
 
             // Detect Stalled Movement
@@ -130,8 +130,8 @@ namespace controller
 
             if (Mathf.Abs(Vector2.Distance(rigidbody2D.position, fo.player.GetPosition())) > fo.haltDistance)
             {
-                var position = rigidbody2D.position;
-                var dir = fo.player.GetPosition() - position;
+                Vector2 position = rigidbody2D.position;
+                Vector2 dir = fo.player.GetPosition() - position;
                 rigidbody2D.MovePosition(position + dir.normalized * (fo.spd * Time.fixedDeltaTime));
 
                 // Detect Stalled Movement

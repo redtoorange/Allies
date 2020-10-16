@@ -77,8 +77,10 @@ namespace controller
 
         private void OnDestroy()
         {
-            foreach (var gameCharacter in targetManager.GetTargets())
+            foreach (GameCharacter gameCharacter in targetManager.GetTargets())
+            {
                 gameCharacter.OnCharacterDestroyed -= RemoveTarget;
+            }
         }
 
 
@@ -97,7 +99,7 @@ namespace controller
                 innocentController.ConvertToZombie();
                 return;
             }
-            
+
             AllyController allyController = other.gameObject.GetComponent<AllyController>();
             if (allyController)
             {
@@ -143,7 +145,7 @@ namespace controller
                     SetState(ZombieState.Chase);
                 }
             }
-            else if(currentState != zombieManager.GetGlobalState())
+            else if (currentState != zombieManager.GetGlobalState())
             {
                 SetState(zombieManager.GetGlobalState());
             }
@@ -157,7 +159,7 @@ namespace controller
 
         private void OnEnteredChaseZone(Collider2D other)
         {
-            var gc = other.GetComponent<GameCharacter>();
+            GameCharacter gc = other.GetComponent<GameCharacter>();
             if (gc != null && (gc.CompareTag("Player") || gc.CompareTag("Innocent") || gc.CompareTag("Ally")))
             {
                 targetManager.AddTarget(gc);
@@ -206,20 +208,19 @@ namespace controller
 
         private void CreateZombieOrders()
         {
-            if (NeedsOrder())
-                switch (GetState())
-                {
-                    case ZombieState.Shamble:
-                        orders.Enqueue(ZombieOrderFactory.CreateShambleOrder(this, config));
-                        orders.Enqueue(ZombieOrderFactory.CreateWaitOrder(this, config));
-                        break;
-                    case ZombieState.Chase:
-                        orders.Enqueue(ZombieOrderFactory.CreateChaseOrders(this, config));
-                        break;
-                    case ZombieState.Combat:
-                        orders.Enqueue(ZombieOrderFactory.CreateCombatOrders(this, config));
-                        break;
-                }
+            switch (GetState())
+            {
+                case ZombieState.Shamble:
+                    orders.Enqueue(ZombieOrderFactory.CreateShambleOrder(this, config));
+                    orders.Enqueue(ZombieOrderFactory.CreateWaitOrder(this, config));
+                    break;
+                case ZombieState.Chase:
+                    orders.Enqueue(ZombieOrderFactory.CreateChaseOrders(this, config));
+                    break;
+                case ZombieState.Combat:
+                    orders.Enqueue(ZombieOrderFactory.CreateCombatOrders(this, config));
+                    break;
+            }
         }
     }
 }

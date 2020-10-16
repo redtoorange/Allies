@@ -9,7 +9,7 @@ namespace managers.factories
     {
         public static Order CreateWanderOrder(InnocentController controller, InnocentConfig config)
         {
-            var destination = new Vector2(
+            Vector2 destination = new Vector2(
                 Random.Range(-config.wanderRange, config.wanderRange),
                 Random.Range(-config.wanderRange, config.wanderRange)
             );
@@ -29,7 +29,7 @@ namespace managers.factories
 
         public static Order CreateCombatOrders(InnocentController controller, InnocentConfig config)
         {
-            var destination = new Vector2(
+            Vector2 destination = new Vector2(
                 Random.Range(-config.combatRange, config.combatRange),
                 Random.Range(-config.combatRange, config.combatRange)
             );
