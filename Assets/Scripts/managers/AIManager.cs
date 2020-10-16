@@ -5,6 +5,7 @@ namespace managers
 {
     public abstract class AIManager<T> : MonoBehaviour
     {
+        [SerializeField]
         protected List<T> controllers;
         protected GameManager gameManager;
         protected GameRoundManager gameRoundManager;

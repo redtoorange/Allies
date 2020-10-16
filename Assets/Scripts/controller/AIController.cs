@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using orders;
 using UnityEngine;
 
@@ -7,7 +8,7 @@ namespace controller
     public abstract class AIController : MonoBehaviour
     {
         private readonly float movementThreshold = 0.1f;
-        private readonly float stallThreshold = 0.001f;
+        private readonly float stallThreshold = 0.01f;
         protected Order currentOrder;
 
         protected Queue<Order> orders = new Queue<Order>();
@@ -20,8 +21,22 @@ namespace controller
             rigidbody2D = GetComponent<Rigidbody2D>();
         }
 
+        private void OnDisable()
+        {
+            DumpOrders();
+        }
+
+        private void OnDestroy()
+        {
+            DumpOrders();
+        }
+
         public Vector2 GetPosition()
         {
+            if (rigidbody2D == null)
+            {
+                Debug.Log("Error");
+            }
             return rigidbody2D.position;
         }
 

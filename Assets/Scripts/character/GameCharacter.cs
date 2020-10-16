@@ -29,6 +29,7 @@ namespace character
             {
                 DestroyingCharacter();
                 Destroy(gameObject);
+                gameObject.SetActive(false);
             }
         }
 

@@ -132,7 +132,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stats:
-    health: 1
+    health: 3
   shambleSprite: {fileID: 1671069285514178736}
   chaseSprite: {fileID: 5509155690567727851}
 --- !u!114 &8325642059385210965

@@ -112,26 +112,27 @@ namespace controller
 
         public void SetState(ZombieState state)
         {
-            if (state != currentState)
-            {
-                currentState = state;
-                controlledZombie.SetMode(currentState);
-                DumpOrders();
+            currentState = state;
+            controlledZombie.SetMode(currentState);
+            DumpOrders();
 
-                if (state == ZombieState.Combat)
-                {
-                    SetSearchRange(config.combatSearchRange);
-                }
+            if (state == ZombieState.Combat)
+            {
+                SetSearchRange(config.combatSearchRange);
             }
         }
 
         private void CalculateState()
         {
-            if (GetClosestTarget() != null)
+            GameCharacter target = GetClosestTarget();
+            if (target != null)
             {
-                SetState(ZombieState.Chase);
+                if (currentState != ZombieState.Chase || currentOrder is ChaseOrder co && co.target != target)
+                {
+                    SetState(ZombieState.Chase);
+                }
             }
-            else
+            else if(currentState != zombieManager.GetGlobalState())
             {
                 SetState(zombieManager.GetGlobalState());
             }
@@ -161,7 +162,6 @@ namespace controller
 
             targetManager.RemoveTarget(gc);
             gc.OnCharacterDestroyed -= RemoveTarget;
-            CalculateState();
         }
 
         protected override void HandleOrder(Order order)
