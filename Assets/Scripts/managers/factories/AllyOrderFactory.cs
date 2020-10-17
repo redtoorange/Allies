@@ -30,7 +30,6 @@ namespace managers.factories
 
                 if (distance <= config.combatRange)
                 {
-                    Debug.Log(AllyController.TAG + "Created Fire Order");
                     return new FireOrder(threat);
                 }
             }

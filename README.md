@@ -19,3 +19,8 @@ packaged and distributed as part of this repository. Some modification of
 Kenney's assets are distributed under the `Assets/Art/Modified` directory.
 
 [Micro Roguelike Assets](https://www.kenney.nl/assets/micro-roguelike)
+
+## Dependencies
+
+- [LeanTween](https://github.com/dentedpixel/LeanTween) - LeanTween is an efficient tweening engine for 
+the Unity 3d engine.
