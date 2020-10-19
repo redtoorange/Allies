@@ -4,12 +4,11 @@ namespace bullet
 {
     public class Bullet : MonoBehaviour
     {
+        [Header("Bullet Config")]
         [SerializeField]
         private int damageAmount = 1;
-
         [SerializeField]
         private float travelSpeed = 1.0f;
-
         [SerializeField]
         private float timeToLive = 3.0f;
 

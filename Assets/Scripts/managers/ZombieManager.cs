@@ -39,11 +39,13 @@ namespace managers
             ZombieController controller = go.GetComponent<ZombieController>();
 
             AddController(controller);
+            gameRoundManager.SetCountDirty();
         }
 
         public void RemoveZombie(ZombieController zombieController)
         {
             RemoveController(zombieController);
+            gameRoundManager.SetCountDirty();
         }
 
         public ZombieState GetGlobalState()

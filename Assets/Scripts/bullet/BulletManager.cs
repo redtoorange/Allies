@@ -6,11 +6,11 @@ namespace bullet
     public class BulletManager : MonoBehaviour
     {
         [SerializeField]
-        private int cacheSize = 200;
-
-        [SerializeField]
         private Bullet bulletPrefab;
-
+        
+        [SerializeField]
+        private int cacheSize = 200;
+        
         private List<Bullet> bulletCache;
         private int currentIndex;
 

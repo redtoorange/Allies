@@ -43,6 +43,7 @@ namespace managers
         private void OnInnocentConverted(InnocentController innocent, InnocentConvertedTo to)
         {
             RemoveController(innocent);
+            gameRoundManager.SetCountDirty();
             if (to == InnocentConvertedTo.Ally)
             {
                 gameManager.GetAllyManager().SpawnAlly(innocent.GetPosition());

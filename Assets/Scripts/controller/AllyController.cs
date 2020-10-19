@@ -13,25 +13,23 @@ namespace controller
     public class AllyController : AIController
     {
         public static readonly string TAG = "[AllyController]";
-        
+
+        // Events
+        public event Action<AllyController> OnDeath;
         public event Action<AllyController> OnConverted;
 
         [SerializeField]
-        private AllyConfig config;
-
-        [SerializeField]
         private AllyState currentState = AllyState.Follow;
-
         [SerializeField]
+        private AllyConfig config = null;
+
+        private Ally controlledAlly = null;
+        private ActivatedZone firingZone = null;
+        private Player followedPlayer = null;
+        private AllyManager manager = null;
+
+
         private TargetManager<Zombie> targetManager = new TargetManager<Zombie>();
-
-        private Ally controlledAlly;
-
-        private ActivatedZone firingZone;
-        private Player followedPlayer;
-
-        private AllyManager manager;
-
         private bool canShoot = true;
         private float shotCooldown = 0.0f;
 
@@ -59,7 +57,7 @@ namespace controller
                     canShoot = true;
                 }
             }
-            
+
             CalculateState();
 
             if (NeedsOrder())
@@ -81,9 +79,6 @@ namespace controller
             }
         }
 
-        // Events
-        public event Action<AllyController> OnDeath;
-
         private void CalculateState()
         {
             if (canShoot && GetClosestTarget() != null && manager.GetGlobalState() == AllyState.Combat)
@@ -95,6 +90,8 @@ namespace controller
                 SetState(AllyState.Follow);
             }
         }
+
+        public AllyState GetState() => currentState;
 
         public void SetState(AllyState state)
         {
@@ -133,32 +130,17 @@ namespace controller
         private bool HandleFireOrder(FireOrder fires)
         {
             manager.FireBullet(this, fires.target.GetPosition());
-            
+
             canShoot = false;
             shotCooldown = config.shotCooldown;
-            
+
             return true;
         }
 
 
-        public AllyState GetCurrentState()
-        {
-            return currentState;
-        }
-
-        public Player GetPlayer()
-        {
-            return followedPlayer;
-        }
-
-        public Zombie GetClosestTarget()
-        {
-            return targetManager.GetClosestTarget(GetPosition());
-        }
-
         private void CreateAllyOrders()
         {
-            switch (GetCurrentState())
+            switch (GetState())
             {
                 case AllyState.Neutral:
                     orders.Enqueue(AllyOrderFactory.CreateNeutralOrders(this, config));
@@ -180,6 +162,9 @@ namespace controller
             }
         }
 
+        /// If a zombie exited the fire zone, it either died or moved out.  Check to see if it was the current target
+        /// and Dump orders if needed.
+        /// TODO Replace this with an Event?
         private void OnExitedFireZone(Collider2D other)
         {
             if (other.GetComponent<GameCharacter>() is Zombie z)
@@ -193,6 +178,7 @@ namespace controller
             }
         }
 
+        /// Convert the Ally into a Zombie. This triggers an Event dispatch and then Destroys the GO
         public void ConvertToZombie()
         {
             gameObject.SetActive(false);
@@ -200,5 +186,9 @@ namespace controller
             controlledAlly.DestroyingCharacter();
             Destroy(gameObject);
         }
+
+        public Player GetPlayer() => followedPlayer;
+
+        public Zombie GetClosestTarget() => targetManager.GetClosestTarget(GetPosition());
     }
 }

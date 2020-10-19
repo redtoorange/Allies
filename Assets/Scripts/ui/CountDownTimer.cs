@@ -14,11 +14,8 @@ namespace ui
         private int currentDisplayNumber;
         private float remainingTime;
         private bool started;
-
         private Dictionary<int, string> stringCache;
-
         private float timeOut;
-
         private bool triggered;
 
         private void Awake()

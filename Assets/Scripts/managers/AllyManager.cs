@@ -48,7 +48,8 @@ namespace managers
             AllyController allyController = go.GetComponent<AllyController>();
 
             AddController(go.GetComponent<AllyController>());
-
+            gameRoundManager.SetCountDirty();
+            
             allyController.OnConverted += OnAllyConverted;
         }
 
@@ -66,6 +67,8 @@ namespace managers
         private void OnAllyConverted(AllyController allyController)
         {
             RemoveController(allyController);
+            gameRoundManager.SetCountDirty();
+            
             gameManager.GetZombieManager().SpawnZombie(allyController.GetPosition());
         }
     }

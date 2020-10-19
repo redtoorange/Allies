@@ -30,6 +30,11 @@ namespace managers
         }
 
 
+        public int GetControllerCount()
+        {
+            return controllers.Count;
+        }
+        
         protected abstract void HandlePhaseChange(GameRoundPhase phase);
     }
 }
