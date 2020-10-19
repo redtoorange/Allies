@@ -29,6 +29,8 @@ namespace controller
 
         private void Update()
         {
+            if (GameManager.S.IsGamePaused()) return;
+            
             if (Input.GetMouseButtonDown((int) MouseButton.LeftMouse))
             {
                 Vector2 lookDirection = camera.ScreenToWorldPoint(Input.mousePosition) - transform.position;
@@ -39,6 +41,8 @@ namespace controller
 
         private void FixedUpdate()
         {
+            if (GameManager.S.IsGamePaused()) return;
+            
             Vector2 inputDelta = Vector2.zero;
 
             inputDelta.x = Input.GetAxisRaw("Horizontal");

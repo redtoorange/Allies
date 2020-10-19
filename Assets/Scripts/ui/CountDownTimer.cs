@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using managers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -35,6 +36,8 @@ namespace ui
 
         private void Update()
         {
+            if (GameManager.S.IsGamePaused()) return;
+            
             if (!triggered && started)
             {
                 remainingTime -= Time.deltaTime;

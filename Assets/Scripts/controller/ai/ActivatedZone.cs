@@ -6,6 +6,8 @@ namespace controller.ai
     public class ActivatedZone : MonoBehaviour
     {
         private CircleCollider2D chaseZone;
+        public event Action<Collider2D> OnTriggerEntered;
+        public event Action<Collider2D> OnTriggerExited;
 
         private void Start()
         {
@@ -21,9 +23,6 @@ namespace controller.ai
         {
             OnTriggerExited?.Invoke(other);
         }
-
-        public event Action<Collider2D> OnTriggerEntered;
-        public event Action<Collider2D> OnTriggerExited;
 
         public void SetRange(float radius)
         {

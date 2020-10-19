@@ -48,6 +48,8 @@ namespace controller
 
         private void Update()
         {
+            if (GameManager.S.IsGamePaused()) return;
+            
             if (shotCooldown > 0)
             {
                 shotCooldown -= Time.deltaTime;
@@ -73,6 +75,8 @@ namespace controller
 
         private void FixedUpdate()
         {
+            if (GameManager.S.IsGamePaused()) return;
+            
             if (currentOrder != null)
             {
                 HandleOrder(currentOrder);

@@ -5,6 +5,11 @@ namespace managers
 {
     public class GameManager : MonoBehaviour
     {
+        public static GameManager S;
+        
+        [SerializeField]
+        private bool gamePaused = true;
+
         private AllyManager allyManager;
         private BulletManager bulletManager;
         private GameRoundManager gameRoundManager;
@@ -14,6 +19,11 @@ namespace managers
 
         private void Awake()
         {
+            if (S == null)
+            {
+                S = this;
+            }
+            
             gameRoundManager = GetComponentInChildren<GameRoundManager>();
             innocentManager = GetComponentInChildren<InnocentManager>();
             allyManager = GetComponentInChildren<AllyManager>();
@@ -50,6 +60,16 @@ namespace managers
         public BulletManager GetBulletManager()
         {
             return bulletManager;
+        }
+
+        public bool IsGamePaused()
+        {
+            return gamePaused;
+        }
+
+        public void SetGamePaused(bool paused)
+        {
+            gamePaused = paused;
         }
     }
 }

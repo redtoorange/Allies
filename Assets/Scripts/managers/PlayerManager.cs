@@ -4,18 +4,28 @@ namespace managers
 {
     public class PlayerManager : MonoBehaviour
     {
-        private readonly bool combatStarted = false;
+        private bool combatStarted = false;
         private GameRoundManager gameRoundManager;
 
         private void Start()
         {
             gameRoundManager = GetComponentInParent<GameManager>().GetGameRoundManager();
+            gameRoundManager.OnPhaseChange += HandlePhaseChange;
+        }
+
+        private void HandlePhaseChange(GameRoundPhase newPhase)
+        {
+            if (newPhase == GameRoundPhase.Combat)
+            {
+                combatStarted = true;
+            }
         }
 
         public void CheckToStartCombat()
         {
             if (!combatStarted)
             {
+                combatStarted = true;
                 gameRoundManager.TriggerCombat();
             }
         }

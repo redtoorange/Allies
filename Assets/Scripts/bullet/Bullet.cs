@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using managers;
+using UnityEngine;
 
 namespace bullet
 {
@@ -22,6 +23,8 @@ namespace bullet
 
         private void FixedUpdate()
         {
+            if (GameManager.S.IsGamePaused()) return;
+            
             if (!fired) return;
 
             rigidbody2D.MovePosition(

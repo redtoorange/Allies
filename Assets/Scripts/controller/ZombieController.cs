@@ -57,6 +57,8 @@ namespace controller
 
         private void FixedUpdate()
         {
+            if (GameManager.S.IsGamePaused()) return;
+            
             CalculateState();
 
             if (NeedsOrder())

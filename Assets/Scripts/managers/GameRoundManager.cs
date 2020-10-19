@@ -87,7 +87,7 @@ namespace managers
 
         public void SetPhase(GameRoundPhase newPhase)
         {
-            if (newPhase != currentPhase)
+            if (newPhase != currentPhase && (currentPhase != GameRoundPhase.Lost || currentPhase != GameRoundPhase.Won))
             {
                 Debug.Log("Changing from " + currentPhase + " to " + newPhase);
                 currentPhase = newPhase;
@@ -97,7 +97,9 @@ namespace managers
 
         private void LateUpdate()
         {
-            if (currentPhase == GameRoundPhase.Won || currentPhase == GameRoundPhase.Lost) 
+            if (GameManager.S.IsGamePaused()) return;
+            
+            if (currentPhase == GameRoundPhase.Won || currentPhase == GameRoundPhase.Lost)
                 return;
 
             if (countDirty)
