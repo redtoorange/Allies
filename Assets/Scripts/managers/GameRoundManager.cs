@@ -114,13 +114,15 @@ namespace managers
 
             if (zombieCount == 0 && winOnNoZombies)
             {
-                Debug.Log("Round Won!: " + currentPhase);
+                gameManager.SetGamePaused(true);
+                gameManager.GetUIController().DisplayWinScreen();
                 SetPhase(GameRoundPhase.Won);
             }
             else if (survivorCount == 0 && loseOnNoSurvivors)
             {
+                gameManager.SetGamePaused(true);
+                gameManager.GetUIController().DisplayLoseScreen();
                 SetPhase(GameRoundPhase.Lost);
-                Debug.Log("Round Lost!");
             }
         }
     }

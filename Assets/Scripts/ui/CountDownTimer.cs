@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using managers;
 using TMPro;
@@ -14,21 +15,27 @@ namespace ui
         public UnityEvent OnTimeOut;
         private int currentDisplayNumber;
         private float remainingTime;
-        private bool started;
+        private bool started = false;
         private Dictionary<int, string> stringCache;
         private float timeOut;
-        private bool triggered;
+        private bool triggered = false;
 
         private void Awake()
         {
             BuildStringCache();
-            Reset();
         }
 
-        public void Reset()
+        public void ResetCounter()
         {
             started = false;
             triggered = false;
+            remainingTime = timeOut;
+            currentDisplayNumber = Mathf.FloorToInt(remainingTime);
+            textLabel.SetText(stringCache[currentDisplayNumber]);
+        }
+
+        private void Start()
+        {
             remainingTime = timeOut;
             currentDisplayNumber = Mathf.FloorToInt(remainingTime);
             textLabel.SetText(stringCache[currentDisplayNumber]);
@@ -73,7 +80,7 @@ namespace ui
 
         public void StartTimer()
         {
-            Reset();
+            ResetCounter();
             started = true;
         }
 

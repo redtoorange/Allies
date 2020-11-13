@@ -1,4 +1,5 @@
 ﻿using bullet;
+using ui;
 using UnityEngine;
 
 namespace managers
@@ -16,6 +17,8 @@ namespace managers
         private InnocentManager innocentManager;
         private PlayerManager playerManager;
         private ZombieManager zombieManager;
+        
+        private UIController uiController;
 
         private void Awake()
         {
@@ -30,6 +33,8 @@ namespace managers
             zombieManager = GetComponentInChildren<ZombieManager>();
             playerManager = GetComponentInChildren<PlayerManager>();
             bulletManager = GetComponentInChildren<BulletManager>();
+
+            uiController = FindObjectOfType<UIController>();
         }
 
         public GameRoundManager GetGameRoundManager()
@@ -70,6 +75,11 @@ namespace managers
         public void SetGamePaused(bool paused)
         {
             gamePaused = paused;
+        }
+
+        public UIController GetUIController()
+        {
+            return uiController;
         }
     }
 }

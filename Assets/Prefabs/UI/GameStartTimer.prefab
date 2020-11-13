@@ -275,4 +275,4 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   textLabel: {fileID: 6610929277940524930}
-  timeAmount: 2
+  timeAmount: 1
