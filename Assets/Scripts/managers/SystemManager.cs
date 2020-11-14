@@ -4,12 +4,9 @@ using UnityEngine;
 
 namespace managers
 {
-    public class GameManager : MonoBehaviour
+    public class SystemManager : MonoBehaviour
     {
-        public static GameManager S;
-        
-        [SerializeField]
-        private bool gamePaused = true;
+       
 
         private AllyManager allyManager;
         private BulletManager bulletManager;
@@ -17,16 +14,11 @@ namespace managers
         private InnocentManager innocentManager;
         private PlayerManager playerManager;
         private ZombieManager zombieManager;
-        
-        private UIController uiController;
+
+        private UIManager uiManager;
 
         private void Awake()
         {
-            if (S == null)
-            {
-                S = this;
-            }
-            
             gameRoundManager = GetComponentInChildren<GameRoundManager>();
             innocentManager = GetComponentInChildren<InnocentManager>();
             allyManager = GetComponentInChildren<AllyManager>();
@@ -34,7 +26,7 @@ namespace managers
             playerManager = GetComponentInChildren<PlayerManager>();
             bulletManager = GetComponentInChildren<BulletManager>();
 
-            uiController = FindObjectOfType<UIController>();
+            uiManager = FindObjectOfType<UIManager>();
         }
 
         public GameRoundManager GetGameRoundManager()
@@ -67,19 +59,11 @@ namespace managers
             return bulletManager;
         }
 
-        public bool IsGamePaused()
-        {
-            return gamePaused;
-        }
-
-        public void SetGamePaused(bool paused)
-        {
-            gamePaused = paused;
-        }
+       
 
         public UIController GetUIController()
         {
-            return uiController;
+            return uiManager.GetUIController();
         }
     }
 }

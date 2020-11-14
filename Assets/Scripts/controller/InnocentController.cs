@@ -1,6 +1,7 @@
 ﻿using System;
 using character;
 using controller.ai;
+using DefaultNamespace;
 using managers;
 using managers.factories;
 using orders;
@@ -44,7 +45,7 @@ namespace controller
 
         private void FixedUpdate()
         {
-            if (GameManager.S.IsGamePaused()) return;
+            if (GameController.S.IsGamePaused()) return;
             
             CalculateState();
 

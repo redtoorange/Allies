@@ -20,7 +20,7 @@ namespace managers
         {
             base.Start();
 
-            bulletManager = gameManager.GetBulletManager();
+            bulletManager = systemManager.GetBulletManager();
 
             for (int i = 0; i < controllers.Count; i++)
             {
@@ -69,7 +69,7 @@ namespace managers
             RemoveController(allyController);
             gameRoundManager.SetCountDirty();
             
-            gameManager.GetZombieManager().SpawnZombie(allyController.GetPosition());
+            systemManager.GetZombieManager().SpawnZombie(allyController.GetPosition());
         }
     }
 }

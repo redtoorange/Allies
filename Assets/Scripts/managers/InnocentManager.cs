@@ -46,11 +46,11 @@ namespace managers
             gameRoundManager.SetCountDirty();
             if (to == InnocentConvertedTo.Ally)
             {
-                gameManager.GetAllyManager().SpawnAlly(innocent.GetPosition());
+                systemManager.GetAllyManager().SpawnAlly(innocent.GetPosition());
             }
             else if (to == InnocentConvertedTo.Zombie)
             {
-                gameManager.GetZombieManager().SpawnZombie(innocent.GetPosition());
+                systemManager.GetZombieManager().SpawnZombie(innocent.GetPosition());
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using bullet;
+using DefaultNamespace;
 using managers;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -29,7 +30,7 @@ namespace controller
 
         private void Update()
         {
-            if (GameManager.S.IsGamePaused()) return;
+            if (GameController.S.IsGamePaused()) return;
             
             if (Input.GetMouseButtonDown((int) MouseButton.LeftMouse))
             {
@@ -41,7 +42,7 @@ namespace controller
 
         private void FixedUpdate()
         {
-            if (GameManager.S.IsGamePaused()) return;
+            if (GameController.S.IsGamePaused()) return;
             
             Vector2 inputDelta = Vector2.zero;
 

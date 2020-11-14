@@ -9,7 +9,7 @@ namespace managers
 
         private void Start()
         {
-            gameRoundManager = GetComponentInParent<GameManager>().GetGameRoundManager();
+            gameRoundManager = GetComponentInParent<SystemManager>().GetGameRoundManager();
             gameRoundManager.OnPhaseChange += HandlePhaseChange;
         }
 

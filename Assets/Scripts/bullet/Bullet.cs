@@ -1,4 +1,5 @@
-﻿using managers;
+﻿using DefaultNamespace;
+using managers;
 using UnityEngine;
 
 namespace bullet
@@ -23,7 +24,7 @@ namespace bullet
 
         private void FixedUpdate()
         {
-            if (GameManager.S.IsGamePaused()) return;
+            if (GameController.S.IsGamePaused()) return;
             
             if (!fired) return;
 

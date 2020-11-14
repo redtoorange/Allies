@@ -1,4 +1,5 @@
 ﻿using System;
+using DefaultNamespace;
 using ui;
 using UnityEngine;
 
@@ -29,7 +30,7 @@ namespace managers
         [SerializeField]
         private GameRoundPhase currentPhase = GameRoundPhase.Recruitment;
 
-        private GameManager gameManager = null;
+        private SystemManager systemManager = null;
         private InnocentManager innocentManager = null;
         private AllyManager allyManager = null;
         private ZombieManager zombieManager = null;
@@ -50,10 +51,10 @@ namespace managers
                 recruitmentCountdown.StartTimer();
             }
 
-            gameManager = GetComponentInParent<GameManager>();
-            innocentManager = gameManager.GetInnocentManager();
-            allyManager = gameManager.GetAllyManager();
-            zombieManager = gameManager.GetZombieManager();
+            systemManager = GetComponentInParent<SystemManager>();
+            innocentManager = systemManager.GetInnocentManager();
+            allyManager = systemManager.GetAllyManager();
+            zombieManager = systemManager.GetZombieManager();
         }
 
         private void OnDisable()
@@ -97,7 +98,7 @@ namespace managers
 
         private void LateUpdate()
         {
-            if (GameManager.S.IsGamePaused()) return;
+            if (GameController.S.IsGamePaused()) return;
             
             if (currentPhase == GameRoundPhase.Won || currentPhase == GameRoundPhase.Lost)
                 return;
@@ -114,14 +115,14 @@ namespace managers
 
             if (zombieCount == 0 && winOnNoZombies)
             {
-                gameManager.SetGamePaused(true);
-                gameManager.GetUIController().DisplayWinScreen();
+                GameController.S.SetGamePaused(true);
+                systemManager.GetUIController().DisplayWinScreen();
                 SetPhase(GameRoundPhase.Won);
             }
             else if (survivorCount == 0 && loseOnNoSurvivors)
             {
-                gameManager.SetGamePaused(true);
-                gameManager.GetUIController().DisplayLoseScreen();
+                GameController.S.SetGamePaused(true);
+                systemManager.GetUIController().DisplayLoseScreen();
                 SetPhase(GameRoundPhase.Lost);
             }
         }

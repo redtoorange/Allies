@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using managers;
 using orders;
 using UnityEngine;
 
@@ -14,10 +15,13 @@ namespace controller
         private Vector2 positionLastFrame = new Vector2(float.MinValue, float.MinValue);
         protected Rigidbody2D rigidbody2D;
 
+        protected SystemManager systemManager;
 
         protected void Start()
         {
             rigidbody2D = GetComponent<Rigidbody2D>();
+            systemManager = GetComponentInParent<SystemManager>();
+            
         }
 
         private void OnDisable()

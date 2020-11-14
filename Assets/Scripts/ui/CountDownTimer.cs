@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DefaultNamespace;
 using managers;
 using TMPro;
 using UnityEngine;
@@ -43,7 +44,7 @@ namespace ui
 
         private void Update()
         {
-            if (GameManager.S.IsGamePaused()) return;
+            if (GameController.S.IsGamePaused()) return;
             
             if (!triggered && started)
             {

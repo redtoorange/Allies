@@ -7,15 +7,15 @@ namespace managers
     {
         [SerializeField]
         protected List<T> controllers;
-        protected GameManager gameManager;
+        protected SystemManager systemManager;
         protected GameRoundManager gameRoundManager;
 
         protected void Start()
         {
             controllers = new List<T>(GetComponentsInChildren<T>());
-            gameManager = GetComponentInParent<GameManager>();
+            systemManager = GetComponentInParent<SystemManager>();
 
-            gameRoundManager = GetComponentInParent<GameManager>().GetGameRoundManager();
+            gameRoundManager = GetComponentInParent<SystemManager>().GetGameRoundManager();
             gameRoundManager.OnPhaseChange += HandlePhaseChange;
         }
 
