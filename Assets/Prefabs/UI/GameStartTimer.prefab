@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6610929277014001556}
   - component: {fileID: 6610929277014001558}
   - component: {fileID: 6610929277014001559}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,7 +86,7 @@ GameObject:
   - component: {fileID: 6610929277940524931}
   - component: {fileID: 6610929277940524933}
   - component: {fileID: 6610929277940524930}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: Counter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -219,7 +219,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6610929277964331806}
   - component: {fileID: 6610929277964331873}
-  m_Layer: 5
+  m_Layer: 10
   m_Name: GameStartTimer
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-namespace ui
+namespace ui.manager
 {
-    public class UIController : MonoBehaviour
+    public class ModalUIController : MonoBehaviour
     {
         [SerializeField]
         private GameObject winScreen;

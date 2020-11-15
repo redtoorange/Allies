@@ -1,7 +1,6 @@
 ﻿using System;
 using character;
 using controller.ai;
-using DefaultNamespace;
 using managers;
 using managers.factories;
 using orders;

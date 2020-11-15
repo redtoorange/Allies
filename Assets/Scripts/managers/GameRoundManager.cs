@@ -1,5 +1,5 @@
 ﻿using System;
-using DefaultNamespace;
+using controller;
 using ui;
 using UnityEngine;
 
@@ -21,10 +21,9 @@ namespace managers
         [SerializeField]
         private bool winOnNoZombies = true;
 
-        [SerializeField]
         private CountDownTimer recruitmentCountdown = null;
-        [SerializeField]
         private InnocentCounter innocentCounter = null;
+        
         [SerializeField]
         private float recruitmentRoundLength = 30.0f;
         [SerializeField]
@@ -43,6 +42,13 @@ namespace managers
 
         private void Start()
         {
+            systemManager = GetComponentInParent<SystemManager>();
+            
+            innocentManager = systemManager.GetInnocentManager();
+            allyManager = systemManager.GetAllyManager();
+            zombieManager = systemManager.GetZombieManager();
+            
+            recruitmentCountdown = systemManager.GetUIManager().GetRecruitmentTimer();
             if (recruitmentCountdown)
             {
                 recruitmentCountdown.OnTimeOut.AddListener(RecruitmentEnded);
@@ -50,11 +56,12 @@ namespace managers
                 recruitmentCountdown.gameObject.SetActive(true);
                 recruitmentCountdown.StartTimer();
             }
-
-            systemManager = GetComponentInParent<SystemManager>();
-            innocentManager = systemManager.GetInnocentManager();
-            allyManager = systemManager.GetAllyManager();
-            zombieManager = systemManager.GetZombieManager();
+            
+            innocentCounter = systemManager.GetUIManager().GetInnocentCounter();
+            if (innocentCounter)
+            {
+                innocentCounter.SetCounter(survivorCount);
+            }
         }
 
         private void OnDisable()
@@ -116,13 +123,13 @@ namespace managers
             if (zombieCount == 0 && winOnNoZombies)
             {
                 GameController.S.SetGamePaused(true);
-                systemManager.GetUIController().DisplayWinScreen();
+                systemManager.GetUIManager().GetModalUIController().DisplayWinScreen();
                 SetPhase(GameRoundPhase.Won);
             }
             else if (survivorCount == 0 && loseOnNoSurvivors)
             {
                 GameController.S.SetGamePaused(true);
-                systemManager.GetUIController().DisplayLoseScreen();
+                systemManager.GetUIManager().GetModalUIController().DisplayLoseScreen();
                 SetPhase(GameRoundPhase.Lost);
             }
         }

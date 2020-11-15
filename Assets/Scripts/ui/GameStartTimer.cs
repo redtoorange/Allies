@@ -6,8 +6,7 @@ namespace ui
 {
     public class GameStartTimer : MonoBehaviour
     {
-        [SerializeField]
-        private UnityEvent onTimerOut;
+        public UnityEvent onTimerOut;
 
         [SerializeField]
         private TextMeshProUGUI textLabel = null;
@@ -36,6 +35,11 @@ namespace ui
                     gameObject.SetActive(false);
                 }
             }
+        }
+
+        public void Disable()
+        {
+            gameObject.SetActive(false);
         }
     }
 }

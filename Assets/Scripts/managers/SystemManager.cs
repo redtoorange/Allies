@@ -1,13 +1,12 @@
 ﻿using bullet;
 using ui;
+using ui.manager;
 using UnityEngine;
 
 namespace managers
 {
     public class SystemManager : MonoBehaviour
     {
-       
-
         private AllyManager allyManager;
         private BulletManager bulletManager;
         private GameRoundManager gameRoundManager;
@@ -27,6 +26,10 @@ namespace managers
             bulletManager = GetComponentInChildren<BulletManager>();
 
             uiManager = FindObjectOfType<UIManager>();
+            if (uiManager == null)
+            {
+                Debug.LogError("Null UIManager in SystemManager");
+            }
         }
 
         public GameRoundManager GetGameRoundManager()
@@ -61,9 +64,9 @@ namespace managers
 
        
 
-        public UIController GetUIController()
+        public UIManager GetUIManager()
         {
-            return uiManager.GetUIController();
+            return uiManager;
         }
     }
 }
