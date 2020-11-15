@@ -374,6 +374,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameStartTimer
       objectReference: {fileID: 0}
+    - target: {fileID: 6610929277964331807, guid: 0813b2e9808c2354bb8c9bcf8d37efe6, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6610929277964331873, guid: 0813b2e9808c2354bb8c9bcf8d37efe6, type: 3}
       propertyPath: onTimerOut.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -1172,7 +1176,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3351999219480820908, guid: e7afa16988a0a214e9b3020a2bad12c0, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3351999219480820908, guid: e7afa16988a0a214e9b3020a2bad12c0, type: 3}
       propertyPath: m_AnchorMin.y
@@ -1196,7 +1200,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3351999219616986030, guid: e7afa16988a0a214e9b3020a2bad12c0, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3351999219616986030, guid: e7afa16988a0a214e9b3020a2bad12c0, type: 3}
       propertyPath: m_AnchorMin.y
@@ -1220,7 +1224,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3351999220217003116, guid: e7afa16988a0a214e9b3020a2bad12c0, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3351999220217003116, guid: e7afa16988a0a214e9b3020a2bad12c0, type: 3}
       propertyPath: m_AnchorMin.y
