@@ -9,6 +9,7 @@ namespace character
         private void Start()
         {
             base.Start();
+            overrideDeath = true;
         }
     }
 }

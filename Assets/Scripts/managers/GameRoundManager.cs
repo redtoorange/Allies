@@ -23,12 +23,13 @@ namespace managers
 
         private CountDownTimer recruitmentCountdown = null;
         private InnocentCounter innocentCounter = null;
-        
+
         [SerializeField]
         private float recruitmentRoundLength = 30.0f;
         [SerializeField]
         private GameRoundPhase currentPhase = GameRoundPhase.Recruitment;
 
+        private PlayerManager playerManager = null;
         private SystemManager systemManager = null;
         private InnocentManager innocentManager = null;
         private AllyManager allyManager = null;
@@ -43,11 +44,13 @@ namespace managers
         private void Start()
         {
             systemManager = GetComponentInParent<SystemManager>();
-            
+
             innocentManager = systemManager.GetInnocentManager();
             allyManager = systemManager.GetAllyManager();
             zombieManager = systemManager.GetZombieManager();
-            
+            playerManager = systemManager.GetPlayerManager();
+            playerManager.playerDied += OnPlayerDiedNotification;
+
             recruitmentCountdown = systemManager.GetUIManager().GetRecruitmentTimer();
             if (recruitmentCountdown)
             {
@@ -56,7 +59,7 @@ namespace managers
                 recruitmentCountdown.gameObject.SetActive(true);
                 recruitmentCountdown.StartTimer();
             }
-            
+
             innocentCounter = systemManager.GetUIManager().GetInnocentCounter();
             if (innocentCounter)
             {
@@ -103,10 +106,17 @@ namespace managers
             }
         }
 
+        private void OnPlayerDiedNotification()
+        {
+            GameController.S.SetGamePaused(true);
+            systemManager.GetUIManager().GetModalUIController().DisplayLoseScreen();
+            SetPhase(GameRoundPhase.Lost);
+        }
+
         private void LateUpdate()
         {
             if (GameController.S.IsGamePaused()) return;
-            
+
             if (currentPhase == GameRoundPhase.Won || currentPhase == GameRoundPhase.Lost)
                 return;
 

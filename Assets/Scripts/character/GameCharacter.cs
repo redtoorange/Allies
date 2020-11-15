@@ -16,6 +16,7 @@ namespace character
         protected StatLine stats;
 
         private Rigidbody2D rb2d;
+        protected bool overrideDeath = false;
 
         protected void Start()
         {
@@ -25,7 +26,7 @@ namespace character
         public void TakeDamage(int amount)
         {
             stats.health -= amount;
-            if (stats.health <= 0)
+            if (stats.health <= 0 && !overrideDeath)
             {
                 DestroyingCharacter();
                 Destroy(gameObject);
@@ -46,6 +47,11 @@ namespace character
         public void DestroyingCharacter()
         {
             OnCharacterDestroyed?.Invoke(this);
+        }
+
+        public int GetHealth()
+        {
+            return stats.health;
         }
     }
 }
