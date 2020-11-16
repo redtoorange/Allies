@@ -1,4 +1,5 @@
 ﻿using managers;
+using preferences;
 using ui.manager;
 using UnityEngine;
 
@@ -10,6 +11,7 @@ namespace controller
 
         private UIManager uiManager;
         private SystemManager systemManager;
+        private LevelUnlocker levelUnlocker;
 
         [SerializeField]
         private bool startGamePaused = true;
@@ -38,6 +40,12 @@ namespace controller
             if (systemManager == null)
             {
                 Debug.LogError("Missing SystemManager in GameController");
+            }
+
+            levelUnlocker = FindObjectOfType<LevelUnlocker>();
+            if (levelUnlocker == null)
+            {
+                Debug.LogError("Missing LevelUnlocker in GameController");
             }
         }
 
