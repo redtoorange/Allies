@@ -1,5 +1,7 @@
 ﻿using bullet;
+using character;
 using managers;
+using ui.health;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -15,22 +17,31 @@ namespace controller
         private BulletManager bulletManager;
         private Camera camera;
         private PlayerManager playerManager;
+        private Player controlledPlayer;
 
         private Rigidbody2D rigidbody2D;
+
+        private HealthBar playerHealthBar = null;
 
         private void Start()
         {
             camera = Camera.main;
 
+            controlledPlayer = GetComponent<Player>();
             bulletManager = FindObjectOfType<BulletManager>();
             playerManager = GetComponentInParent<PlayerManager>();
             rigidbody2D = GetComponent<Rigidbody2D>();
+
+            playerHealthBar = GetComponentInParent<SystemManager>()
+                .GetUIManager()
+                .GetPlayerHealthBar();
+            playerHealthBar.SetHealth(controlledPlayer.GetHealth());
         }
 
         private void Update()
         {
             if (GameController.S.IsGamePaused()) return;
-            
+
             if (Input.GetMouseButtonDown((int) MouseButton.LeftMouse))
             {
                 Vector2 lookDirection = camera.ScreenToWorldPoint(Input.mousePosition) - transform.position;
@@ -42,7 +53,7 @@ namespace controller
         private void FixedUpdate()
         {
             if (GameController.S.IsGamePaused()) return;
-            
+
             Vector2 inputDelta = Vector2.zero;
 
             inputDelta.x = Input.GetAxisRaw("Horizontal");
@@ -61,6 +72,17 @@ namespace controller
             if (innocentController != null)
             {
                 innocentController.ConvertToAlly();
+            }
+        }
+
+        public void TakeDamage(int amount)
+        {
+            controlledPlayer.TakeDamage(amount);
+            playerHealthBar.SetHealth(controlledPlayer.GetHealth());
+
+            if (controlledPlayer.GetHealth() <= 0)
+            {
+                playerManager.PlayerDied();
             }
         }
     }

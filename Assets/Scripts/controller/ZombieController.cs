@@ -40,21 +40,6 @@ namespace controller
             activatedZone.OnTriggerEntered += OnEnteredChaseZone;
         }
 
-        // private void OnExitedChaseZone(Collider2D other)
-        // {
-        //     GameCharacter gc = other.GetComponent<GameCharacter>();
-        //     if (gc)
-        //     {
-        //         targetManager.RemoveTarget(gc);
-        //         if (currentOrder is ChaseOrder co && co.target == gc)
-        //         {
-        //             DumpOrders();
-        //         }
-        //
-        //         CalculateState();
-        //     }
-        // }
-
         private void FixedUpdate()
         {
             if (GameController.S.IsGamePaused()) return;
@@ -92,6 +77,7 @@ namespace controller
             if (playerController)
             {
                 // Do damage to player
+                playerController.TakeDamage(1);
                 return;
             }
 
