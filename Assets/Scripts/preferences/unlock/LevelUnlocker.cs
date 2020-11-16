@@ -6,9 +6,16 @@ namespace preferences
     {
         [SerializeField]
         private int levelId;
+        [SerializeField] [Tooltip("Reset all progress before saving")]
+        private bool wipeSave = false;
 
         private void Start()
         {
+            if (wipeSave)
+            {
+                LevelSaveSystem.ResetUnlocks();
+            }
+
             LevelUnlock savedLevels = LevelSaveSystem.LoadUnlocks();
             bool modified = false;
 

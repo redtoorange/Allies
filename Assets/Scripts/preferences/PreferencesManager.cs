@@ -1,27 +1,34 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace preferences
 {
+    [Serializable]
+    public enum SettingsKeys
+    {
+        SOUND_VOLUME,
+        MUSIC_VOLUME
+    }
+
     public class PreferencesManager
     {
-        private static readonly string VOLUME_KEY = "VOLUME";
-
-        public static float GetVolume()
+        public static int Get(SettingsKeys key)
         {
-            if (PlayerPrefs.HasKey(VOLUME_KEY))
+            if (PlayerPrefs.HasKey(key.ToString()))
             {
-                return PlayerPrefs.GetFloat(VOLUME_KEY);
+                return PlayerPrefs.GetInt(key.ToString());
             }
             else
             {
-                return 1.0f;
+                return 100;
             }
         }
 
-        public static void SetVolume(float level)
+        public static void Set(SettingsKeys key, int level)
         {
-            float clamped = Mathf.Clamp(level, 0.0f, 1.0f);
-            PlayerPrefs.SetFloat(VOLUME_KEY, clamped);
+            int clamped = Mathf.Clamp(level, 0, 100);
+            PlayerPrefs.SetInt(key.ToString(), clamped);
+            Debug.Log("Wrote {'" + key.ToString() + "': '" + level + "'}");
         }
     }
 }
