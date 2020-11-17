@@ -47,5 +47,13 @@ namespace preferences.settings
                 sliders[i].Default();
             }
         }
+
+        public void OnCancelClicked()
+        {
+            for (int i = 0; i < sliders.Count; i++)
+            {
+                sliders[i].Reset();
+            }
+        }
     }
 }

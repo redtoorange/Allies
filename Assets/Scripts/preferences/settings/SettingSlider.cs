@@ -8,6 +8,8 @@ namespace preferences.settings
 
         public abstract void Default();
 
+        public abstract void Reset();
+
         public abstract bool HasUnsavedChanges();
     }
 }

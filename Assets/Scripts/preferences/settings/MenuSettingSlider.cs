@@ -44,6 +44,7 @@ namespace preferences.settings
         public override void Save()
         {
             PreferencesManager.Set(settingKey, currentValue);
+            startingValue = currentValue;
         }
 
         public override void Default()
@@ -56,6 +57,13 @@ namespace preferences.settings
         public override bool HasUnsavedChanges()
         {
             return currentValue != startingValue;
+        }
+
+        public override void Reset()
+        {
+            currentValue = startingValue;
+            slider.SetValueWithoutNotify(currentValue);
+            inputField.SetTextWithoutNotify(currentValue + "");
         }
     }
 }
