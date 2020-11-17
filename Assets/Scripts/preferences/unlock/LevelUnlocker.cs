@@ -49,5 +49,10 @@ namespace preferences.unlock
                 LevelSaveSystem.SaveUnlocks(savedLevels);
             }
         }
+
+        public int GetLevelId()
+        {
+            return levelId;
+        }
     }
 }
