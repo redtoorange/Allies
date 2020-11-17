@@ -1,6 +1,7 @@
 ﻿using System;
 using character;
 using controller.ai;
+using controller.audioController;
 using managers;
 using managers.factories;
 using orders;
@@ -28,6 +29,7 @@ namespace controller
         private InnocentState currentState = InnocentState.Neutral;
 
         private InnocentManager manager;
+        private InnocentSoundController innocentSoundController;
 
         private void Start()
         {
@@ -40,6 +42,8 @@ namespace controller
             activatedZone = GetComponentInChildren<ActivatedZone>();
             activatedZone.OnTriggerEntered += OnEnteredRunZone;
             activatedZone.OnTriggerExited += OnExitedRunZone;
+
+            innocentSoundController = GetComponentInParent<InnocentSoundController>();
         }
 
         private void FixedUpdate()
@@ -108,6 +112,7 @@ namespace controller
 
         public void ConvertToZombie()
         {
+            innocentSoundController.PlayDeathSound();
             gameObject.SetActive(false);
             OnConverted?.Invoke(this, InnocentConvertedTo.Zombie);
             controlledInnocent.DestroyingCharacter();
@@ -116,6 +121,7 @@ namespace controller
 
         public void ConvertToAlly()
         {
+            innocentSoundController.PlayConvertedSound();
             gameObject.SetActive(false);
             OnConverted?.Invoke(this, InnocentConvertedTo.Ally);
             controlledInnocent.DestroyingCharacter();

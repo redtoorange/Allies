@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace preferences
+namespace preferences.unlock
 {
     public class LevelUnlocker : MonoBehaviour
     {

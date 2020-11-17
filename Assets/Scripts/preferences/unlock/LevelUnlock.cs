@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace preferences
+namespace preferences.unlock
 {
     [Serializable]
     public class LevelUnlock

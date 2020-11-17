@@ -2728,8 +2728,6 @@ MonoBehaviour:
   levelRowDataFiles:
   - {fileID: 11400000, guid: 7574f61ca193bd8499c20289df8dc460, type: 2}
   - {fileID: 11400000, guid: 4ced385823ddce84f941dfe2c3bad87c, type: 2}
-  - {fileID: 11400000, guid: e8f883c716f30514bb6b50e18448116b, type: 2}
-  - {fileID: 11400000, guid: f4a699a669a97d74b99cbd9955097929, type: 2}
 --- !u!1 &1076677250
 GameObject:
   m_ObjectHideFlags: 0

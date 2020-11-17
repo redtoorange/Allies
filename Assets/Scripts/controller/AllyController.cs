@@ -1,6 +1,7 @@
 ﻿using System;
 using character;
 using controller.ai;
+using controller.audioController;
 using managers;
 using managers.factories;
 using orders;
@@ -27,6 +28,7 @@ namespace controller
         private ActivatedZone firingZone = null;
         private Player followedPlayer = null;
         private AllyManager manager = null;
+        private AllySoundController allySoundController;
 
 
         private TargetManager<Zombie> targetManager = new TargetManager<Zombie>();
@@ -44,12 +46,14 @@ namespace controller
             firingZone = GetComponentInChildren<ActivatedZone>();
             firingZone.OnTriggerEntered += OnEnteredFireZone;
             firingZone.OnTriggerExited += OnExitedFireZone;
+
+            allySoundController = GetComponentInParent<AllySoundController>();
         }
 
         private void Update()
         {
             if (GameController.S.IsGamePaused()) return;
-            
+
             if (shotCooldown > 0)
             {
                 shotCooldown -= Time.deltaTime;
@@ -76,7 +80,7 @@ namespace controller
         private void FixedUpdate()
         {
             if (GameController.S.IsGamePaused()) return;
-            
+
             if (currentOrder != null)
             {
                 HandleOrder(currentOrder);
@@ -134,6 +138,7 @@ namespace controller
         private bool HandleFireOrder(FireOrder fires)
         {
             manager.FireBullet(this, fires.target.GetPosition());
+            allySoundController.PlayShootSound();
 
             canShoot = false;
             shotCooldown = config.shotCooldown;

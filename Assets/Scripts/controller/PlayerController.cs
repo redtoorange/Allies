@@ -1,5 +1,6 @@
 ﻿using bullet;
 using character;
+using controller.audioController;
 using managers;
 using ui.health;
 using UnityEngine;
@@ -22,6 +23,7 @@ namespace controller
         private Rigidbody2D rigidbody2D;
 
         private HealthBar playerHealthBar = null;
+        private PlayerSoundController playerSoundController;
 
         private void Start()
         {
@@ -31,6 +33,7 @@ namespace controller
             bulletManager = FindObjectOfType<BulletManager>();
             playerManager = GetComponentInParent<PlayerManager>();
             rigidbody2D = GetComponent<Rigidbody2D>();
+            playerSoundController = GetComponentInParent<PlayerSoundController>();
 
             playerHealthBar = GetComponentInParent<SystemManager>()
                 .GetUIManager()
@@ -46,6 +49,7 @@ namespace controller
             {
                 Vector2 lookDirection = camera.ScreenToWorldPoint(Input.mousePosition) - transform.position;
                 bulletManager.FireBullet(gameObject, rigidbody2D.position, lookDirection.normalized);
+                playerSoundController.PlayShootSound();
                 playerManager.CheckToStartCombat();
             }
         }
@@ -77,11 +81,13 @@ namespace controller
 
         public void TakeDamage(int amount)
         {
+            playerSoundController.PlayHitSound();
             controlledPlayer.TakeDamage(amount);
             playerHealthBar.SetHealth(controlledPlayer.GetHealth());
 
             if (controlledPlayer.GetHealth() <= 0)
             {
+                playerSoundController.PlayDeathSound();
                 playerManager.PlayerDied();
             }
         }
