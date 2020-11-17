@@ -130,6 +130,7 @@ MonoBehaviour:
   easeType: 27
   transitionTime: 0.5
   fadeTime: 0.25
+  fadeEase: 9
   pauseMenuPanel: {fileID: 3065145863253718281}
   settingsPanel: {fileID: 7130161807865937553}
   background: {fileID: 537311702973418576}

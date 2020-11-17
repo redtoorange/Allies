@@ -1,10 +1,9 @@
-﻿using preferences;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace controller.audioController
 {
     [RequireComponent(typeof(AudioSource))]
-    public class AllySoundController : MonoBehaviour
+    public class AllySoundController : SoundController
     {
         private AudioSource audioSource;
 
@@ -14,20 +13,20 @@ namespace controller.audioController
         [SerializeField]
         private AudioClip deathSound;
 
+
         private void Start()
         {
             audioSource = GetComponent<AudioSource>();
-            audioSource.volume = PreferencesManager.Get(SettingsKeys.SOUND_VOLUME) / 100.0f;
         }
 
         public void PlayShootSound()
         {
-            audioSource.PlayOneShot(gunShotSound);
+            audioSource.PlayOneShot(gunShotSound, volume);
         }
 
         public void PlayDeathSound()
         {
-            audioSource.PlayOneShot(deathSound);
+            audioSource.PlayOneShot(deathSound, volume);
         }
     }
 }

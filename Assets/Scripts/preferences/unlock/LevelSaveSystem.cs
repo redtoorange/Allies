@@ -13,6 +13,11 @@ namespace preferences.unlock
 
         public static void SaveUnlocks(LevelUnlock unlocks)
         {
+            if (Application.platform == RuntimePlatform.WebGLPlayer)
+            {
+                Debug.Log("Cannot save on HTML5");
+                return;
+            }
             BinaryFormatter formatter = new BinaryFormatter();
             string path = Application.persistentDataPath + "/levels.big";
 
@@ -23,6 +28,13 @@ namespace preferences.unlock
 
         public static LevelUnlock LoadUnlocks()
         {
+            if (Application.platform == RuntimePlatform.WebGLPlayer)
+            {
+                Debug.Log("Cannot save on HTML5");
+                LevelUnlock unlocks = LevelUnlock.NewSave(10);
+                return unlocks;
+            }
+            
             string path = Application.persistentDataPath + "/levels.big";
 
             if (File.Exists(path))

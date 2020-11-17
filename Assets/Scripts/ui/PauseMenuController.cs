@@ -20,6 +20,10 @@ namespace ui
         private LevelUnlocker levelUnlocker;
         private CanvasGroup canvasGroup;
 
+        private float leftGutterPositionX;
+        private float centerPositionX;
+        private float rightGutterPositionX;
+
         private enum CurrentScreen
         {
             MAIN_MAIN,
@@ -47,6 +51,11 @@ namespace ui
             canvasGroup = GetComponent<CanvasGroup>();
             levelUnlocker = FindObjectOfType<LevelUnlocker>();
 
+            centerPositionX = pauseMenuPanel.transform.position.x;
+            rightGutterPositionX = settingsPanel.transform.position.x;
+            leftGutterPositionX = centerPositionX - (rightGutterPositionX - centerPositionX);
+
+
             CloseNow();
         }
 
@@ -65,31 +74,13 @@ namespace ui
             }
         }
 
-        public void CloseNow()
+        private void CloseNow()
         {
-            if (LeanTween.isTweening(gameObject))
-            {
-                LeanTween.cancel(gameObject);
-            }
-
             currentState = CurrentState.CLOSED;
-
-            LeanTween.alphaCanvas(canvasGroup, 0.0f, 0.0f)
-                .setEase(fadeEase)
-                .setOnComplete(() =>
-                {
-                    pauseMenuPanel.SetActive(false);
-                    settingsPanel.SetActive(false);
-                    background.SetActive(false);
-
-                    GameController.S.SetGamePaused(false);
-
-                    if (currentScreen != CurrentScreen.MAIN_MAIN)
-                    {
-                        MoveScreens(pauseMenuPanel, settingsPanel, 1500);
-                        currentScreen = CurrentScreen.MAIN_MAIN;
-                    }
-                });
+            pauseMenuPanel.SetActive(false);
+            settingsPanel.SetActive(false);
+            background.SetActive(false);
+            canvasGroup.alpha = 0;
         }
 
         public void FadeClosed()
@@ -157,22 +148,34 @@ namespace ui
         public void TransitionToSettings()
         {
             currentScreen = CurrentScreen.SETTINGS;
-            TransitionScreens(pauseMenuPanel, settingsPanel, -1500);
+            TransitionScreensLeft(pauseMenuPanel, settingsPanel);
         }
 
         public void TransitionToPauseMenu()
         {
-            TransitionScreens(pauseMenuPanel, settingsPanel, 1500);
             currentScreen = CurrentScreen.MAIN_MAIN;
+            TransitionScreensRight(settingsPanel, pauseMenuPanel);
         }
 
-        private void TransitionScreens(GameObject screenA, GameObject screenB, float delta)
+        private void TransitionScreensRight(GameObject screenA, GameObject screenB)
         {
             Vector2 screenAPos = screenA.transform.position;
-            screenAPos.x += delta;
+            screenAPos.x = rightGutterPositionX;
 
             Vector2 screenBPos = screenB.transform.position;
-            screenBPos.x += delta;
+            screenBPos.x = centerPositionX;
+
+            LeanTween.move(screenA, screenAPos, transitionTime).setEase(easeType);
+            LeanTween.move(screenB, screenBPos, transitionTime).setEase(easeType);
+        }
+
+        private void TransitionScreensLeft(GameObject screenA, GameObject screenB)
+        {
+            Vector2 screenAPos = screenA.transform.position;
+            screenAPos.x = leftGutterPositionX;
+
+            Vector2 screenBPos = screenB.transform.position;
+            screenBPos.x = centerPositionX;
 
             LeanTween.move(screenA, screenAPos, transitionTime).setEase(easeType);
             LeanTween.move(screenB, screenBPos, transitionTime).setEase(easeType);

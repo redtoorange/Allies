@@ -4,7 +4,7 @@ using UnityEngine;
 namespace controller.audioController
 {
     [RequireComponent(typeof(AudioSource))]
-    public class InnocentSoundController : MonoBehaviour
+    public class InnocentSoundController : SoundController
     {
         private AudioSource audioSource;
 
@@ -17,17 +17,16 @@ namespace controller.audioController
         private void Start()
         {
             audioSource = GetComponent<AudioSource>();
-            audioSource.volume = PreferencesManager.Get(SettingsKeys.SOUND_VOLUME) / 100.0f;
         }
 
         public void PlayDeathSound()
         {
-            audioSource.PlayOneShot(deathSound);
+            audioSource.PlayOneShot(deathSound, volume);
         }
 
         public void PlayConvertedSound()
         {
-            audioSource.PlayOneShot(convertedSound);
+            audioSource.PlayOneShot(convertedSound, volume);
         }
     }
 }
