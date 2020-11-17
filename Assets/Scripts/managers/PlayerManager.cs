@@ -1,9 +1,12 @@
+using System;
 using UnityEngine;
 
 namespace managers
 {
     public class PlayerManager : MonoBehaviour
     {
+        public Action playerDied;
+        
         private bool combatStarted = false;
         private GameRoundManager gameRoundManager;
 
@@ -28,6 +31,11 @@ namespace managers
                 combatStarted = true;
                 gameRoundManager.TriggerCombat();
             }
+        }
+
+        public void PlayerDied()
+        {
+            playerDied.Invoke();
         }
     }
 }

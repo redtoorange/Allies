@@ -1,4 +1,5 @@
 ﻿using managers;
+using ui.health;
 using UnityEngine;
 
 namespace ui.manager
@@ -11,6 +12,7 @@ namespace ui.manager
         private CountDownTimer recruitmentTimer;
         private InnocentCounter innocentCounter;
         private GameStartTimer gameStartTimer;
+        private HealthBar playerHealthBar;
 
         private void Awake()
         {
@@ -18,7 +20,7 @@ namespace ui.manager
             recruitmentTimer = GetComponentInChildren<CountDownTimer>();
             innocentCounter = GetComponentInChildren<InnocentCounter>();
             gameStartTimer = GetComponentInChildren<GameStartTimer>();
-            // lifeContainer = GetComponentInChildren<GameStartTimer>();
+            playerHealthBar = GetComponentInChildren<HealthBar>();
 
             systemManager = FindObjectOfType<SystemManager>();
         }
@@ -46,6 +48,11 @@ namespace ui.manager
         public GameStartTimer GetGameStartTimer()
         {
             return gameStartTimer;
+        }
+
+        public HealthBar GetPlayerHealthBar()
+        {
+            return playerHealthBar;
         }
     }
 }

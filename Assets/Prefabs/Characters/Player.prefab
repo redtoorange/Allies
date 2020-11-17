@@ -130,7 +130,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stats:
-    health: 0
+    health: 6
 --- !u!114 &-371954519470470540
 MonoBehaviour:
   m_ObjectHideFlags: 0
