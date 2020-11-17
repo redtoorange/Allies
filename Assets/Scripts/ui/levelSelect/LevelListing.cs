@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using preferences;
 using UnityEngine;
 
 namespace ui.levelSelect
@@ -8,19 +9,28 @@ namespace ui.levelSelect
         [SerializeField]
         private LevelRow levelListingPrefab;
 
-        private List<LevelRow> listings;
-
         [SerializeField]
-        private int levelCount = 10;
+        private List<LevelRowData> levelRowDataFiles;
+
+        private List<LevelRow> listings;
 
         private void Start()
         {
+            int levelCount = levelRowDataFiles.Count;
+
+            LevelUnlock levelsUnlocked = LevelSaveSystem.LoadUnlocks();
+
             listings = new List<LevelRow>(levelCount);
-            for (int i = 0; i < levelCount; i++)
+            for (int i = 1; i <= levelCount; i++)
             {
-                listings.Add(Instantiate(levelListingPrefab, transform));
+                LevelRow row = Instantiate(levelListingPrefab, transform);
+
+                row.SetData(levelRowDataFiles[i-1]);
+                row.SetLevelUnlocked(levelsUnlocked.unlockedLevels[i]);
+
+                listings.Add(row);
             }
-            
+
             GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 100 * levelCount);
         }
     }

@@ -35,7 +35,9 @@ namespace preferences
             }
             else
             {
-                return LevelUnlock.NewSave(10);
+                LevelUnlock unlocks = LevelUnlock.NewSave(10);
+                SaveUnlocks(unlocks);
+                return unlocks;
             }
         }
     }

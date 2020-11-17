@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -25,6 +26,11 @@ namespace ui
         private GameObject settingsPanel;
         [SerializeField]
         private GameObject levelSelectPanel;
+
+        private void Start()
+        {
+            Debug.Log(Application.persistentDataPath);
+        }
 
         public void StartGameClicked()
         {

@@ -12,13 +12,15 @@ namespace preferences
         {
             LevelUnlock newSave = new LevelUnlock();
 
-            newSave.unlockedLevels = new bool[count];
+            newSave.unlockedLevels = new bool[count + 1];
             newSave.levelCount = count;
 
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i <= count; i++)
             {
                 newSave.unlockedLevels[i] = false;
             }
+
+            newSave.unlockedLevels[1] = true;
 
             return newSave;
         }

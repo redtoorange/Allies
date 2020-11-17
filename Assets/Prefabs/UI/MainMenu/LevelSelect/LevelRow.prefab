@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6232897453880576259}
   - component: {fileID: 6232897453880576256}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: ButtonLabel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -212,6 +212,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0e61058d7d8480d98078f7664c629c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelImage: {fileID: 6232897454997059884}
+  levelLabel: {fileID: 6232897455743730504}
+  loadButton: {fileID: 6232897455773096513}
+  lockedImage: {fileID: 21300000, guid: a762c43b5cca5734aba63609bea378e4, type: 3}
+  lockedTitle: ????
 --- !u!1 &6232897454126190578
 GameObject:
   m_ObjectHideFlags: 0
@@ -222,7 +227,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6232897454126190581}
   m_Layer: 5
-  m_Name: GameObject
+  m_Name: ButtonContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -336,7 +341,7 @@ GameObject:
   - component: {fileID: 6232897455743730504}
   - component: {fileID: 6232897455743730505}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: LevelTitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -492,7 +497,7 @@ GameObject:
   - component: {fileID: 6232897455773096513}
   - component: {fileID: 6232897455773096526}
   m_Layer: 5
-  m_Name: Button
+  m_Name: LoadButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -599,7 +604,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6232897455773096512}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8723903840222714141}
+        m_TargetAssemblyTypeName: ui.levelSelect.LevelRow, allies
+        m_MethodName: OnLoadClicked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &6232897455773096526
 MonoBehaviour:
   m_ObjectHideFlags: 0
