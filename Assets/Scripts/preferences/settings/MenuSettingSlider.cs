@@ -17,7 +17,7 @@ namespace preferences.settings
         private Slider slider;
         private TMP_InputField inputField;
 
-        private void Start()
+        private void Awake()
         {
             currentValue = PreferencesManager.Get(settingKey);
             startingValue = currentValue;

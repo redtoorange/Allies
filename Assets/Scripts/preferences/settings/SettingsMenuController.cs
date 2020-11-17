@@ -11,6 +11,8 @@ namespace preferences.settings
         private Button saveButton;
         private List<MenuSettingSlider> sliders;
 
+        public Action SettingsChanged;
+
         private void Start()
         {
             sliders = new List<MenuSettingSlider>(GetComponentsInChildren<MenuSettingSlider>());
@@ -38,6 +40,8 @@ namespace preferences.settings
             {
                 sliders[i].Save();
             }
+
+            SettingsChanged?.Invoke();
         }
 
         public void OnDefaultClicked()

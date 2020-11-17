@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -27,9 +26,15 @@ namespace ui
         [SerializeField]
         private GameObject levelSelectPanel;
 
+        private float leftGutterPositionX;
+        private float centerPositionX;
+        private float rightGutterPositionX;
+
         private void Start()
         {
-            Debug.Log(Application.persistentDataPath);
+            leftGutterPositionX = levelSelectPanel.transform.position.x;
+            centerPositionX = mainMenuPanel.transform.position.x;
+            rightGutterPositionX = settingsPanel.transform.position.x;
         }
 
         public void StartGameClicked()
@@ -45,36 +50,50 @@ namespace ui
         public void TransitionToSettings()
         {
             currentScreen = CurrentScreen.SETTINGS;
-            TransitionScreens(mainMenuPanel, settingsPanel, -1500);
+            TransitionScreensLeft(mainMenuPanel, settingsPanel);
         }
 
         public void TransitionToLevelSelect()
         {
             currentScreen = CurrentScreen.LEVEL_SELECT;
-            TransitionScreens(mainMenuPanel, levelSelectPanel, 1500);
+            TransitionScreensRight(mainMenuPanel, levelSelectPanel);
         }
 
         public void TransitionToMainMenu()
         {
             if (currentScreen == CurrentScreen.SETTINGS)
             {
-                TransitionScreens(mainMenuPanel, settingsPanel, 1500);
+                TransitionScreensRight(settingsPanel, mainMenuPanel);
+
             }
             else if (currentScreen == CurrentScreen.LEVEL_SELECT)
             {
-                TransitionScreens(mainMenuPanel, levelSelectPanel, -1500);
+                TransitionScreensLeft(levelSelectPanel, mainMenuPanel);
+
             }
-            
+
             currentScreen = CurrentScreen.MAIN_MAIN;
         }
 
-        private void TransitionScreens(GameObject screenA, GameObject screenB, float delta)
+        private void TransitionScreensLeft(GameObject screenA, GameObject screenB)
         {
             Vector2 screenAPos = screenA.transform.position;
-            screenAPos.x += delta;
+            screenAPos.x = leftGutterPositionX;
 
             Vector2 screenBPos = screenB.transform.position;
-            screenBPos.x += delta;
+            screenBPos.x = centerPositionX;
+
+            LeanTween.move(screenA, screenAPos, transitionTime).setEase(easeType);
+            LeanTween.move(screenB, screenBPos, transitionTime).setEase(easeType);
+        }
+        
+        private void TransitionScreensRight(GameObject screenA, GameObject screenB)
+        {
+            Vector2 screenAPos = screenA.transform.position;
+            screenAPos.x = rightGutterPositionX;
+
+            Vector2 screenBPos = screenB.transform.position;
+            screenBPos.x = centerPositionX;
 
             LeanTween.move(screenA, screenAPos, transitionTime).setEase(easeType);
             LeanTween.move(screenB, screenBPos, transitionTime).setEase(easeType);

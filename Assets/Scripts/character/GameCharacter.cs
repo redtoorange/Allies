@@ -25,7 +25,9 @@ namespace character
 
         public void TakeDamage(int amount)
         {
+            OnCharacterDamaged?.Invoke(amount);
             stats.health -= amount;
+            
             if (stats.health <= 0 && !overrideDeath)
             {
                 DestroyingCharacter();
@@ -35,6 +37,7 @@ namespace character
         }
 
         public event Action<GameCharacter> OnCharacterDestroyed;
+        public event Action<int> OnCharacterDamaged;
 
         public Vector2 GetPosition()
         {

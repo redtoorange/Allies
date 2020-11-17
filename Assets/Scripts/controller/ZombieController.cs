@@ -1,5 +1,6 @@
 ﻿using character;
 using controller.ai;
+using controller.audioController;
 using managers;
 using managers.factories;
 using orders;
@@ -26,6 +27,7 @@ namespace controller
         private Zombie controlledZombie;
 
         private ZombieManager zombieManager;
+        private ZombieSoundController zombieSoundController;
 
         private void Start()
         {
@@ -34,16 +36,30 @@ namespace controller
             zombieManager = GetComponentInParent<ZombieManager>();
 
             controlledZombie = GetComponent<Zombie>();
-            controlledZombie.OnCharacterDestroyed += _ => zombieManager.RemoveZombie(this);
+            controlledZombie.OnCharacterDestroyed += OnDeath;
+            controlledZombie.OnCharacterDamaged += OnDamage;
 
             activatedZone = GetComponentInChildren<ActivatedZone>();
             activatedZone.OnTriggerEntered += OnEnteredChaseZone;
+
+            zombieSoundController = GetComponentInParent<ZombieSoundController>();
+        }
+
+        private void OnDeath(GameCharacter gc)
+        {
+            zombieManager.RemoveZombie(this);
+            zombieSoundController.PlayDeathSound();
+        }
+
+        private void OnDamage(int amount)
+        {
+            zombieSoundController.PlayHitSound();
         }
 
         private void FixedUpdate()
         {
             if (GameController.S.IsGamePaused()) return;
-            
+
             CalculateState();
 
             if (NeedsOrder())
@@ -150,6 +166,11 @@ namespace controller
             GameCharacter gc = other.GetComponent<GameCharacter>();
             if (gc != null && (gc.CompareTag("Player") || gc.CompareTag("Innocent") || gc.CompareTag("Ally")))
             {
+                if (targetManager.TargetCount() == 0)
+                {
+                    zombieSoundController.PlayAlertSound();
+                }
+
                 targetManager.AddTarget(gc);
                 CalculateState();
                 gc.OnCharacterDestroyed += RemoveTarget;

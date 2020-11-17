@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace preferences
+namespace preferences.unlock
 {
     public class LevelUnlocker : MonoBehaviour
     {
@@ -48,6 +48,11 @@ namespace preferences
             {
                 LevelSaveSystem.SaveUnlocks(savedLevels);
             }
+        }
+
+        public int GetLevelId()
+        {
+            return levelId;
         }
     }
 }
