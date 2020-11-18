@@ -11,7 +11,6 @@ namespace ui.manager
 
         private CountDownTimer recruitmentTimer;
         private InnocentCounter innocentCounter;
-        private GameStartTimer gameStartTimer;
         private HealthBar playerHealthBar;
 
         private void Awake()
@@ -19,7 +18,6 @@ namespace ui.manager
             modalUIController = GetComponentInChildren<ModalUIController>();
             recruitmentTimer = GetComponentInChildren<CountDownTimer>();
             innocentCounter = GetComponentInChildren<InnocentCounter>();
-            gameStartTimer = GetComponentInChildren<GameStartTimer>();
             playerHealthBar = GetComponentInChildren<HealthBar>();
 
             systemManager = FindObjectOfType<SystemManager>();
@@ -43,11 +41,6 @@ namespace ui.manager
         public InnocentCounter GetInnocentCounter()
         {
             return innocentCounter;
-        }
-
-        public GameStartTimer GetGameStartTimer()
-        {
-            return gameStartTimer;
         }
 
         public HealthBar GetPlayerHealthBar()

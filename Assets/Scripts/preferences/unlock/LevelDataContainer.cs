@@ -1,11 +1,14 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using ui.levelSelect;
+using UnityEngine;
 
 namespace preferences.unlock
 {
-    public class LevelUnlocker : MonoBehaviour
+    public class LevelDataContainer : MonoBehaviour
     {
         [SerializeField]
-        private int levelId;
+        private LevelData levelData;
+
         [SerializeField] [Tooltip("Reset all progress before saving")]
         private bool wipeSave = false;
 
@@ -21,11 +24,11 @@ namespace preferences.unlock
 
             if (savedLevels != null)
             {
-                if (levelId < savedLevels.levelCount)
+                if (GetLevelId() < savedLevels.levelCount)
                 {
-                    if (!savedLevels.unlockedLevels[levelId])
+                    if (!savedLevels.unlockedLevels[GetLevelId()])
                     {
-                        savedLevels.unlockedLevels[levelId] = true;
+                        savedLevels.unlockedLevels[GetLevelId()] = true;
                         modified = true;
                         Debug.Log("Level Unlocked");
                     }
@@ -36,7 +39,7 @@ namespace preferences.unlock
                 }
                 else
                 {
-                    Debug.LogError("LevelId [" + levelId + "] out of bounds for LevelUnlock");
+                    Debug.LogError("LevelId [" + GetLevelId() + "] out of bounds for LevelUnlock");
                 }
             }
             else
@@ -52,7 +55,12 @@ namespace preferences.unlock
 
         public int GetLevelId()
         {
-            return levelId;
+            return levelData.levelIndex;
+        }
+
+        public List<string> GetBriefingData()
+        {
+            return levelData.briefingText;
         }
     }
 }

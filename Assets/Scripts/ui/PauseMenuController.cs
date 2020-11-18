@@ -17,7 +17,7 @@ namespace ui
         [SerializeField]
         private LeanTweenType fadeEase = LeanTweenType.easeOutQuart;
 
-        private LevelUnlocker levelUnlocker;
+        private LevelDataContainer levelDataContainer;
         private CanvasGroup canvasGroup;
 
         private float leftGutterPositionX;
@@ -49,7 +49,7 @@ namespace ui
         private void Start()
         {
             canvasGroup = GetComponent<CanvasGroup>();
-            levelUnlocker = FindObjectOfType<LevelUnlocker>();
+            levelDataContainer = FindObjectOfType<LevelDataContainer>();
 
             centerPositionX = pauseMenuPanel.transform.position.x;
             rightGutterPositionX = settingsPanel.transform.position.x;
@@ -132,7 +132,7 @@ namespace ui
 
         public void OnRestartClicked()
         {
-            SceneManager.LoadScene(levelUnlocker.GetLevelId());
+            SceneManager.LoadScene(levelDataContainer.GetLevelId());
         }
 
         public void OnMainMenuClicked()
