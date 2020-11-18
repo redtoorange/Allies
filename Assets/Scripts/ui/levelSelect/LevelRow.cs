@@ -21,9 +21,9 @@ namespace ui.levelSelect
         [SerializeField]
         private string lockedTitle;
 
-        private LevelRowData data;
+        private LevelData data;
 
-        public void SetData(LevelRowData data)
+        public void SetData(LevelData data)
         {
             this.data = data;
         }

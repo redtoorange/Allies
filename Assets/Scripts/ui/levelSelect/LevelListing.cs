@@ -11,7 +11,7 @@ namespace ui.levelSelect
         private LevelRow levelListingPrefab;
 
         [SerializeField]
-        private List<LevelRowData> levelRowDataFiles;
+        private List<LevelData> levelRowDataFiles;
 
         private List<LevelRow> listings;
 

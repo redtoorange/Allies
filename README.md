@@ -1,4 +1,6 @@
 ﻿# Allies
+[Live Demo](http://allies.redtoorangestudio.com.s3-website-us-east-1.amazonaws.com/)
+
 Pretty simple prototype project designed with the theme of Unconventional Weapons. This was
 built over the course of a few weeks but I kept adding to it. Ideally I will add several levels, 
 including a tutorial and there will be some kind of progression with enemies.  Who knows!

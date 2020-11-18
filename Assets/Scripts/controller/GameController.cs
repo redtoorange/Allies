@@ -12,7 +12,7 @@ namespace controller
 
         private UIManager uiManager;
         private SystemManager systemManager;
-        private LevelUnlocker levelUnlocker;
+        private LevelDataContainer levelDataContainer;
 
         [SerializeField]
         private bool startGamePaused = true;
@@ -43,8 +43,8 @@ namespace controller
                 Debug.LogError("Missing SystemManager in GameController");
             }
 
-            levelUnlocker = FindObjectOfType<LevelUnlocker>();
-            if (levelUnlocker == null)
+            levelDataContainer = FindObjectOfType<LevelDataContainer>();
+            if (levelDataContainer == null)
             {
                 Debug.LogError("Missing LevelUnlocker in GameController");
             }
