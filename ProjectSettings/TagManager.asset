@@ -50,3 +50,6 @@ TagManager:
   - name: Bullets
     uniqueID: 2933737517
     locked: 0
+  - name: HelpText
+    uniqueID: 3749003155
+    locked: 0
