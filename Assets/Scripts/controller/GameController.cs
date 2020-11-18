@@ -1,5 +1,4 @@
 ﻿using managers;
-using preferences;
 using preferences.unlock;
 using ui.manager;
 using UnityEngine;
@@ -55,11 +54,9 @@ namespace controller
             if (startGamePaused)
             {
                 gamePaused = true;
-                uiManager.GetGameStartTimer().onTimerOut.AddListener(() => SetGamePaused(false));
             }
             else
             {
-                uiManager.GetGameStartTimer().Disable();
                 gamePaused = false;
             }
         }

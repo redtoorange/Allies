@@ -1,4 +1,5 @@
-﻿using ui.levelSelect;
+﻿using System.Collections.Generic;
+using ui.levelSelect;
 using UnityEngine;
 
 namespace preferences.unlock
@@ -55,6 +56,11 @@ namespace preferences.unlock
         public int GetLevelId()
         {
             return levelData.levelIndex;
+        }
+
+        public List<string> GetBriefingData()
+        {
+            return levelData.briefingText;
         }
     }
 }

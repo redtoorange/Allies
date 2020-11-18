@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace ui.levelSelect
@@ -10,5 +11,6 @@ namespace ui.levelSelect
         public Sprite levelImage;
         public string levelLabel;
         public int levelIndex;
+        public List<String> briefingText;
     }
 }
